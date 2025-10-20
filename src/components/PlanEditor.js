@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ChevronDown, ChevronUp, GripVertical, Trash2, Star, X } from 'lucide-react';
 
 export default function PlanEditor({
@@ -18,6 +18,9 @@ export default function PlanEditor({
   removeFeature,
   plansLength
 }) {
+  const [monthlyActionCollapsed, setMonthlyActionCollapsed] = useState(true);
+  const [yearlyActionCollapsed, setYearlyActionCollapsed] = useState(true);
+  
   return (
     <div 
       className="border rounded-lg" 
@@ -76,32 +79,42 @@ export default function PlanEditor({
             style={{ borderColor: '#d1d5db' }}
           />
 
-          <div className="grid grid-cols-2 gap-2">
-            <div>
-              <label className="text-xs" style={{ color: styles.textColor }}>Monthly</label>
-              <input
-                type="number"
-                value={plan.monthlyPrice}
-                onChange={(e) => updatePlan(plan.id, 'monthlyPrice', parseFloat(e.target.value) || 0)}
-                className="w-full border rounded px-2 py-1 text-sm"
-                style={{ borderColor: '#d1d5db' }}
-              />
+          {/* Monthly Pricing & Action - Collapsible */}
+          <div className="border rounded" style={{ borderColor: '#e5e7eb' }}>
+            <div 
+              className="flex justify-between items-center p-3 cursor-pointer"
+              onClick={() => setMonthlyActionCollapsed(!monthlyActionCollapsed)}
+              style={{ backgroundColor: '#f9fafb' }}
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-semibold" style={{ color: styles.textColor }}>Monthly Price & Action</span>
+                <span className="text-xs px-2 py-0.5 rounded" style={{ backgroundColor: styles.primaryColor, color: 'white' }}>
+                  CHF {plan.monthlyPrice}
+                </span>
+              </div>
+              {monthlyActionCollapsed ? (
+                <ChevronDown size={16} style={{ color: styles.textColor }} />
+              ) : (
+                <ChevronUp size={16} style={{ color: styles.textColor }} />
+              )}
             </div>
-            <div>
-              <label className="text-xs" style={{ color: styles.textColor }}>Yearly</label>
-              <input
-                type="number"
-                value={plan.yearlyPrice}
-                onChange={(e) => updatePlan(plan.id, 'yearlyPrice', parseFloat(e.target.value) || 0)}
-                className="w-full border rounded px-2 py-1 text-sm"
-                style={{ borderColor: '#d1d5db' }}
-              />
-            </div>
-          </div>
+            
+            {!monthlyActionCollapsed && (
+              <div className="p-3 space-y-3">
+                <div>
+                  <label className="text-xs" style={{ color: styles.textColor }}>Monthly Price</label>
+                  <input
+                    type="number"
+                    value={plan.monthlyPrice}
+                    onChange={(e) => updatePlan(plan.id, 'monthlyPrice', parseFloat(e.target.value) || 0)}
+                    className="w-full border rounded px-2 py-1 text-sm"
+                    style={{ borderColor: '#d1d5db' }}
+                  />
+                </div>
 
-          <div>
-            <label className="text-xs font-semibold mb-2 block" style={{ color: styles.textColor }}>Monthly Action</label>
-            <div className="flex gap-2 mb-2">
+                <div>
+                  <label className="text-xs font-semibold mb-2 block" style={{ color: styles.textColor }}>Action Type</label>
+                  <div className="flex gap-2 mb-2">
               <button
                 onClick={() => updatePlan(plan.id, 'monthly', { ...plan.monthly, useEmbed: false })}
                 className={`flex-1 px-3 py-2 rounded text-xs transition-all ${!plan.monthly?.useEmbed ? 'font-semibold' : ''}`}
@@ -147,6 +160,18 @@ export default function PlanEditor({
                     style={{ borderColor: '#d1d5db' }}
                   />
                 </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id={`monthly-new-tab-${plan.id}`}
+                    checked={plan.monthly?.openInNewTab !== false}
+                    onChange={(e) => updatePlan(plan.id, 'monthly', { ...plan.monthly, openInNewTab: e.target.checked })}
+                    className="w-4 h-4"
+                  />
+                  <label htmlFor={`monthly-new-tab-${plan.id}`} className="text-xs" style={{ color: styles.textColor }}>
+                    Open in new tab
+                  </label>
+                </div>
               </>
             ) : (
               <div>
@@ -161,11 +186,91 @@ export default function PlanEditor({
                 />
               </div>
             )}
+            
+            <div className="pt-2 border-t" style={{ borderColor: '#e5e7eb' }}>
+              <label className="text-xs" style={{ color: styles.textColor }}>Promotional Text (replaces action when shown)</label>
+              <input
+                type="text"
+                value={plan.monthly?.promotionalText || ''}
+                onChange={(e) => updatePlan(plan.id, 'monthly', { ...plan.monthly, promotionalText: e.target.value })}
+                placeholder="e.g., Coming Soon, Contact Us, etc."
+                className="w-full border rounded px-2 py-1 text-sm"
+                style={{ borderColor: '#d1d5db' }}
+              />
+              <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>If set, shows instead of button/embed</p>
+            </div>
+            
+            <div className="pt-2 border-t" style={{ borderColor: '#e5e7eb' }}>
+              <label className="flex items-center gap-2 text-xs mb-2" style={{ color: styles.textColor }}>
+                <input
+                  type="checkbox"
+                  checked={plan.monthly?.showEquivalentPrice !== false}
+                  onChange={(e) => updatePlan(plan.id, 'monthly', { ...plan.monthly, showEquivalentPrice: e.target.checked })}
+                  className="rounded"
+                />
+                <span className="font-semibold">Show Equivalent Price</span>
+              </label>
+              
+              {plan.monthly?.showEquivalentPrice !== false && (
+                <div>
+                  <label className="text-xs block mb-1" style={{ color: styles.textColor }}>
+                    Equivalent Template (optional)
+                  </label>
+                  <input
+                    type="text"
+                    value={plan.monthly?.equivalentTemplate || ''}
+                    onChange={(e) => updatePlan(plan.id, 'monthly', { ...plan.monthly, equivalentTemplate: e.target.value })}
+                    placeholder="e.g., Save {savings} annually"
+                    className="w-full border rounded px-2 py-1 text-sm"
+                    style={{ borderColor: '#d1d5db' }}
+                  />
+                  <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>
+                    Use {'{savings}'} for savings amount, {'{equivalent}'} for equivalent rate
+                  </p>
+                </div>
+              )}
+            </div>
+                </div>
+              </div>
+            )}
           </div>
 
-          <div>
-            <label className="text-xs font-semibold mb-2 block" style={{ color: styles.textColor }}>Yearly Action</label>
-            <div className="flex gap-2 mb-2">
+          {/* Yearly Pricing & Action - Collapsible */}
+          <div className="border rounded" style={{ borderColor: '#e5e7eb' }}>
+            <div 
+              className="flex justify-between items-center p-3 cursor-pointer"
+              onClick={() => setYearlyActionCollapsed(!yearlyActionCollapsed)}
+              style={{ backgroundColor: '#f9fafb' }}
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-semibold" style={{ color: styles.textColor }}>Yearly Price & Action</span>
+                <span className="text-xs px-2 py-0.5 rounded" style={{ backgroundColor: styles.accentColor, color: 'white' }}>
+                  CHF {plan.yearlyPrice}
+                </span>
+              </div>
+              {yearlyActionCollapsed ? (
+                <ChevronDown size={16} style={{ color: styles.textColor }} />
+              ) : (
+                <ChevronUp size={16} style={{ color: styles.textColor }} />
+              )}
+            </div>
+            
+            {!yearlyActionCollapsed && (
+              <div className="p-3 space-y-3">
+                <div>
+                  <label className="text-xs" style={{ color: styles.textColor }}>Yearly Price</label>
+                  <input
+                    type="number"
+                    value={plan.yearlyPrice}
+                    onChange={(e) => updatePlan(plan.id, 'yearlyPrice', parseFloat(e.target.value) || 0)}
+                    className="w-full border rounded px-2 py-1 text-sm"
+                    style={{ borderColor: '#d1d5db' }}
+                  />
+                </div>
+
+                <div>
+                  <label className="text-xs font-semibold mb-2 block" style={{ color: styles.textColor }}>Action Type</label>
+                  <div className="flex gap-2 mb-2">
               <button
                 onClick={() => updatePlan(plan.id, 'yearly', { ...plan.yearly, useEmbed: false })}
                 className={`flex-1 px-3 py-2 rounded text-xs transition-all ${!plan.yearly?.useEmbed ? 'font-semibold' : ''}`}
@@ -211,6 +316,18 @@ export default function PlanEditor({
                     style={{ borderColor: '#d1d5db' }}
                   />
                 </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id={`yearly-new-tab-${plan.id}`}
+                    checked={plan.yearly?.openInNewTab !== false}
+                    onChange={(e) => updatePlan(plan.id, 'yearly', { ...plan.yearly, openInNewTab: e.target.checked })}
+                    className="w-4 h-4"
+                  />
+                  <label htmlFor={`yearly-new-tab-${plan.id}`} className="text-xs" style={{ color: styles.textColor }}>
+                    Open in new tab
+                  </label>
+                </div>
               </>
             ) : (
               <div>
@@ -223,6 +340,53 @@ export default function PlanEditor({
                   rows="3"
                   style={{ borderColor: '#d1d5db' }}
                 />
+              </div>
+            )}
+            
+            <div className="pt-2 border-t" style={{ borderColor: '#e5e7eb' }}>
+              <label className="text-xs" style={{ color: styles.textColor }}>Promotional Text (replaces action when shown)</label>
+              <input
+                type="text"
+                value={plan.yearly?.promotionalText || ''}
+                onChange={(e) => updatePlan(plan.id, 'yearly', { ...plan.yearly, promotionalText: e.target.value })}
+                placeholder="e.g., Coming Soon, Contact Us, etc."
+                className="w-full border rounded px-2 py-1 text-sm"
+                style={{ borderColor: '#d1d5db' }}
+              />
+              <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>If set, shows instead of button/embed</p>
+            </div>
+            
+            <div className="pt-2 border-t" style={{ borderColor: '#e5e7eb' }}>
+              <label className="flex items-center gap-2 text-xs mb-2" style={{ color: styles.textColor }}>
+                <input
+                  type="checkbox"
+                  checked={plan.yearly?.showEquivalentPrice !== false}
+                  onChange={(e) => updatePlan(plan.id, 'yearly', { ...plan.yearly, showEquivalentPrice: e.target.checked })}
+                  className="rounded"
+                />
+                <span className="font-semibold">Show Equivalent Price</span>
+              </label>
+              
+              {plan.yearly?.showEquivalentPrice !== false && (
+                <div>
+                  <label className="text-xs block mb-1" style={{ color: styles.textColor }}>
+                    Equivalent Template (optional)
+                  </label>
+                  <input
+                    type="text"
+                    value={plan.yearly?.equivalentTemplate || ''}
+                    onChange={(e) => updatePlan(plan.id, 'yearly', { ...plan.yearly, equivalentTemplate: e.target.value })}
+                    placeholder="e.g., Only {equivalent} per month"
+                    className="w-full border rounded px-2 py-1 text-sm"
+                    style={{ borderColor: '#d1d5db' }}
+                  />
+                  <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>
+                    Use {'{savings}'} for savings amount, {'{equivalent}'} for equivalent rate
+                  </p>
+                </div>
+              )}
+            </div>
+                </div>
               </div>
             )}
           </div>
@@ -238,19 +402,6 @@ export default function PlanEditor({
             <Star size={14} fill={plan.isFeatured ? 'white' : 'none'} />
             {plan.isFeatured ? 'Featured' : 'Set as Featured'}
           </button>
-
-          <div className="flex items-center gap-2 p-2 rounded" style={{ backgroundColor: '#f9fafb' }}>
-            <input
-              type="checkbox"
-              id={`show-equivalent-${plan.id}`}
-              checked={plan.showEquivalentPrice !== false}
-              onChange={(e) => updatePlan(plan.id, 'showEquivalentPrice', e.target.checked)}
-              className="w-4 h-4"
-            />
-            <label htmlFor={`show-equivalent-${plan.id}`} className="text-xs cursor-pointer" style={{ color: styles.textColor }}>
-              Show equivalent price (monthly/yearly)
-            </label>
-          </div>
 
           <div className="space-y-2">
             <div className="flex justify-between items-center">

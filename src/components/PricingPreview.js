@@ -7,20 +7,46 @@ export default function PricingPreview({ plans, styles, header, billingPeriod, s
   };
 
   const getSavingsText = (plan) => {
-    if (billingPeriod === 'monthly') {
-      // Show savings when paying yearly
-      const monthlyCost = plan.monthlyPrice * 12;
-      const yearlyCost = plan.yearlyPrice;
-      const savings = monthlyCost - yearlyCost;
-      if (savings > 0) {
-        return `Save CHF ${savings.toFixed(0)} with annual billing`;
-      }
-      return `CHF ${(plan.yearlyPrice / 12).toFixed(2)} per month if billed annually`;
-    } else {
-      // Show monthly equivalent when viewing yearly
-      const monthlyEquivalent = (plan.yearlyPrice / 12).toFixed(2);
-      return `CHF ${monthlyEquivalent} per month`;
+    // Get current period's configuration
+    const currentConfig = billingPeriod === 'monthly' ? plan.monthly : plan.yearly;
+    
+    // Check if equivalent price should be shown
+    if (currentConfig?.showEquivalentPrice === false) {
+      return '';
     }
+    
+    // Calculate the values
+    let savings = 0;
+    let equivalent = 0;
+    
+    if (billingPeriod === 'monthly' && plan.yearlyPrice > 0) {
+      const totalMonthlyPrice = plan.monthlyPrice * 12;
+      savings = Math.round(totalMonthlyPrice - plan.yearlyPrice);
+      equivalent = Math.round(plan.yearlyPrice / 12);
+    } else if (billingPeriod === 'yearly' && plan.yearlyPrice > 0) {
+      equivalent = Math.round(plan.yearlyPrice / 12);
+      savings = 0;
+    }
+    
+    // If template is provided, use it with placeholders
+    const template = currentConfig?.equivalentTemplate;
+    if (template && template.trim()) {
+      return template
+        .replace(/{savings}/g, `CHF ${savings}`)
+        .replace(/{equivalent}/g, `CHF ${equivalent}`);
+    }
+    
+    // Default templates
+    if (billingPeriod === 'monthly' && plan.yearlyPrice > 0) {
+      if (savings > 0) {
+        return `Save CHF ${savings} with annual billing`;
+      }
+      return `CHF ${equivalent} per month if billed annually`;
+    } else if (billingPeriod === 'yearly' && plan.yearlyPrice > 0) {
+      return `CHF ${equivalent} per month`;
+    }
+    
+    return '';
   };
 
   return (
@@ -104,13 +130,18 @@ export default function PricingPreview({ plans, styles, header, billingPeriod, s
                   </span>
                 </div>
                 <p className="text-xs" style={{ 
-                  color: plan.showEquivalentPrice !== false ? '#9ca3af' : 'transparent',
+                  color: (() => {
+                    const currentConfig = billingPeriod === 'monthly' ? plan.monthly : plan.yearly;
+                    return currentConfig?.showEquivalentPrice !== false ? '#9ca3af' : 'transparent';
+                  })(),
                   minHeight: '1rem'
                 }}>
-                  {plan.showEquivalentPrice !== false 
-                    ? getSavingsText(plan)
-                    : '\u00A0'
-                  }
+                  {(() => {
+                    const currentConfig = billingPeriod === 'monthly' ? plan.monthly : plan.yearly;
+                    return currentConfig?.showEquivalentPrice !== false 
+                      ? getSavingsText(plan)
+                      : '\u00A0';
+                  })()}
                 </p>
               </div>
 
@@ -130,15 +161,38 @@ export default function PricingPreview({ plans, styles, header, billingPeriod, s
               </ul>
 
               {(() => {
+                // Get current period's action configuration
                 const currentAction = billingPeriod === 'monthly' ? plan.monthly : plan.yearly;
+                const promotionalText = currentAction?.promotionalText;
+                
+                // Show promotional text instead of CTA when promotional text exists
+                if (promotionalText && promotionalText.trim()) {
+                  return (
+                    <div 
+                      className="w-full py-3 px-4 rounded-lg text-center font-semibold text-lg"
+                      style={{
+                        backgroundColor: styles.accentColor + '20',
+                        color: styles.accentColor,
+                        borderRadius: `${styles.borderRadius}px`,
+                        border: `2px solid ${styles.accentColor}`
+                      }}
+                    >
+                      {promotionalText}
+                    </div>
+                  );
+                }
+
                 const useEmbed = currentAction?.useEmbed;
                 const buttonText = currentAction?.buttonText || 'Get Started';
                 const buttonLink = currentAction?.buttonLink || '#';
                 const embedCode = currentAction?.embedCode || '';
+                const openInNewTab = currentAction?.openInNewTab !== false;
 
                 return !useEmbed ? (
                   <a
                     href={buttonLink}
+                    target={openInNewTab ? '_blank' : '_self'}
+                    rel={openInNewTab ? 'noopener noreferrer' : undefined}
                     className="block w-full py-3 px-4 rounded-lg text-center font-semibold transition-all"
                     style={{
                       backgroundColor: plan.isFeatured ? styles.accentColor : styles.primaryColor,

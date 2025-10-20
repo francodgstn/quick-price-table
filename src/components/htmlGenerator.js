@@ -1,4 +1,5 @@
 export const generateHTML = (plans, styles, header) => {
+  const defaultPeriod = header.defaultBillingPeriod || 'monthly';
   const fontLink = styles.fontFamily.includes('Montserrat') 
     ? '<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">'
     : '';
@@ -23,46 +24,113 @@ export const generateHTML = (plans, styles, header) => {
           `).join('');
     
     // Monthly and Yearly action data
-    const monthlyAction = plan.monthly || { buttonText: plan.buttonText, buttonLink: plan.buttonLink, embedCode: plan.embedCode, useEmbed: plan.useEmbed };
-    const yearlyAction = plan.yearly || { buttonText: plan.buttonText, buttonLink: plan.buttonLink, embedCode: plan.embedCode, useEmbed: plan.useEmbed };
+    const monthlyAction = plan.monthly || { buttonText: plan.buttonText, buttonLink: plan.buttonLink, embedCode: plan.embedCode, useEmbed: plan.useEmbed, promotionalText: '', openInNewTab: true };
+    const yearlyAction = plan.yearly || { buttonText: plan.buttonText, buttonLink: plan.buttonLink, embedCode: plan.embedCode, useEmbed: plan.useEmbed, promotionalText: '', openInNewTab: true };
+    
+    const monthlyTargetAttr = monthlyAction.openInNewTab !== false ? ' target="_blank" rel="noopener noreferrer"' : '';
+    const yearlyTargetAttr = yearlyAction.openInNewTab !== false ? ' target="_blank" rel="noopener noreferrer"' : '';
     
     const monthlyActionHTML = !monthlyAction.useEmbed 
-      ? `<a href="${monthlyAction.buttonLink || '#'}" class="cta-button ${plan.isFeatured ? 'accent' : 'primary'}">${monthlyAction.buttonText || 'Get Started'}</a>`
+      ? `<a href="${monthlyAction.buttonLink || '#'}"${monthlyTargetAttr} class="cta-button ${plan.isFeatured ? 'accent' : 'primary'}">${monthlyAction.buttonText || 'Get Started'}</a>`
       : `<div class="embed-container">${monthlyAction.embedCode || ''}</div>`;
     
     const yearlyActionHTML = !yearlyAction.useEmbed 
-      ? `<a href="${yearlyAction.buttonLink || '#'}" class="cta-button ${plan.isFeatured ? 'accent' : 'primary'}">${yearlyAction.buttonText || 'Get Started'}</a>`
+      ? `<a href="${yearlyAction.buttonLink || '#'}"${yearlyTargetAttr} class="cta-button ${plan.isFeatured ? 'accent' : 'primary'}">${yearlyAction.buttonText || 'Get Started'}</a>`
       : `<div class="embed-container">${yearlyAction.embedCode || ''}</div>`;
     
-    // Calculate savings
-    const monthlyCost = plan.monthlyPrice * 12;
-    const yearlyCost = plan.yearlyPrice;
-    const savings = monthlyCost - yearlyCost;
-    const savingsTextMonthly = savings > 0 
-      ? `Save CHF ${savings.toFixed(0)} with annual billing`
-      : `CHF ${(plan.yearlyPrice / 12).toFixed(2)} per month if billed annually`;
-    const savingsTextYearly = `CHF ${(plan.yearlyPrice / 12).toFixed(2)} per month`;
+    // Promotional text per billing period
+    const monthlyPromotionalHTML = monthlyAction.promotionalText && monthlyAction.promotionalText.trim()
+      ? `<div class="promo-box" style="background-color: ${styles.accentColor}20; color: ${styles.accentColor}; border: 2px solid ${styles.accentColor}; padding: 0.75rem 1rem; border-radius: ${styles.borderRadius}px; text-align: center; font-weight: 600; font-size: 1.125rem;">${monthlyAction.promotionalText}</div>`
+      : '';
     
-    const priceNoteHTML = plan.showEquivalentPrice !== false ? `
+    const yearlyPromotionalHTML = yearlyAction.promotionalText && yearlyAction.promotionalText.trim()
+      ? `<div class="promo-box" style="background-color: ${styles.accentColor}20; color: ${styles.accentColor}; border: 2px solid ${styles.accentColor}; padding: 0.75rem 1rem; border-radius: ${styles.borderRadius}px; text-align: center; font-weight: 600; font-size: 1.125rem;">${yearlyAction.promotionalText}</div>`
+      : '';
+    
+    // Calculate savings with template system support per billing period
+    const getSavingsText = (isMonthly, config) => {
+      // Check if equivalent price should be shown
+      if (config?.showEquivalentPrice === false) {
+        return '';
+      }
+      
+      // Calculate the values
+      let savings = 0;
+      let equivalent = 0;
+      
+      if (isMonthly && plan.yearlyPrice > 0) {
+        const totalMonthlyPrice = plan.monthlyPrice * 12;
+        savings = Math.round(totalMonthlyPrice - plan.yearlyPrice);
+        equivalent = Math.round(plan.yearlyPrice / 12);
+      } else if (!isMonthly && plan.yearlyPrice > 0) {
+        equivalent = Math.round(plan.yearlyPrice / 12);
+        savings = 0;
+      }
+      
+      // If template is provided, use it with placeholders
+      const template = config?.equivalentTemplate;
+      if (template && template.trim()) {
+        return template
+          .replace(/{savings}/g, `CHF ${savings}`)
+          .replace(/{equivalent}/g, `CHF ${equivalent}`);
+      }
+      
+      // Default templates
+      if (isMonthly && plan.yearlyPrice > 0) {
+        if (savings > 0) {
+          return `Save CHF ${savings} with annual billing`;
+        }
+        return `CHF ${equivalent} per month if billed annually`;
+      } else if (!isMonthly && plan.yearlyPrice > 0) {
+        return `CHF ${equivalent} per month`;
+      }
+      return '';
+    };
+    
+    const savingsTextMonthly = getSavingsText(true, monthlyAction);
+    const savingsTextYearly = getSavingsText(false, yearlyAction);
+    
+    // Determine initial display based on default period
+    const initialPrice = defaultPeriod === 'monthly' ? plan.monthlyPrice : plan.yearlyPrice;
+    const initialPeriod = defaultPeriod === 'monthly' ? 'month' : 'year';
+    const initialSavingsText = defaultPeriod === 'monthly' ? savingsTextMonthly : savingsTextYearly;
+    const initialShowEquivalent = defaultPeriod === 'monthly' 
+      ? monthlyAction.showEquivalentPrice !== false
+      : yearlyAction.showEquivalentPrice !== false;
+    const initialAction = defaultPeriod === 'monthly' 
+      ? (monthlyPromotionalHTML || monthlyActionHTML)
+      : (yearlyPromotionalHTML || yearlyActionHTML);
+    
+    const priceNoteHTML = `
           <p class="price-note" 
              data-monthly-text="${savingsTextMonthly}" 
-             data-yearly-text="${savingsTextYearly}">
-            ${savingsTextMonthly}
-          </p>` : `
-          <p class="price-note" style="visibility: hidden; min-height: 1rem;">&nbsp;</p>`;
+             data-yearly-text="${savingsTextYearly}"
+             data-monthly-show="${monthlyAction.showEquivalentPrice !== false ? 'true' : 'false'}"
+             data-yearly-show="${yearlyAction.showEquivalentPrice !== false ? 'true' : 'false'}"
+             data-monthly-template="${monthlyAction.equivalentTemplate || ''}"
+             data-yearly-template="${yearlyAction.equivalentTemplate || ''}"
+             data-monthly-price="${plan.monthlyPrice}"
+             data-yearly-price="${plan.yearlyPrice}"
+             style="${!initialShowEquivalent ? 'visibility: hidden;' : ''} min-height: 1rem;">
+            ${initialSavingsText || '&nbsp;'}
+          </p>`;
     
     return `
       <div class="pricing-card${plan.isFeatured ? ' featured' : ''}" 
            data-monthly-action="${encodeURIComponent(monthlyActionHTML)}"
-           data-yearly-action="${encodeURIComponent(yearlyActionHTML)}">
+           data-yearly-action="${encodeURIComponent(yearlyActionHTML)}"
+           data-monthly-promo="${encodeURIComponent(monthlyPromotionalHTML)}"
+           data-yearly-promo="${encodeURIComponent(yearlyPromotionalHTML)}"
+           data-has-monthly-promo="${monthlyAction.promotionalText ? 'true' : 'false'}"
+           data-has-yearly-promo="${yearlyAction.promotionalText ? 'true' : 'false'}">
         ${plan.isFeatured ? `<div class="featured-badge">${featuredBadgeText}</div>` : ''}
         
         <div class="card-header">
           <h3 class="plan-name">${plan.name}</h3>
           <p class="plan-description">${plan.description}</p>
           <div class="price-container">
-            <span class="price" data-monthly="${plan.monthlyPrice}" data-yearly="${plan.yearlyPrice}">CHF ${plan.monthlyPrice}</span>
-            <span class="price-period">/month</span>
+            <span class="price" data-monthly="${plan.monthlyPrice}" data-yearly="${plan.yearlyPrice}">CHF ${initialPrice}</span>
+            <span class="price-period">/${initialPeriod}</span>
           </div>
           ${priceNoteHTML}
         </div>
@@ -72,7 +140,7 @@ export const generateHTML = (plans, styles, header) => {
         </ul>
         
         <div class="action-container">
-          ${monthlyActionHTML}
+          ${initialAction}
         </div>
       </div>
       `;
@@ -265,6 +333,17 @@ export const generateHTML = (plans, styles, header) => {
     .embed-container {
       width: 100%;
     }
+    .promo-box {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border-radius: ${styles.borderRadius}px;
+      text-align: center;
+      font-weight: 600;
+      font-size: 1.125rem;
+      background-color: ${styles.accentColor}33;
+      color: ${styles.accentColor};
+      border: 2px solid ${styles.accentColor};
+    }
   </style>
 </head>
 <body>
@@ -273,8 +352,8 @@ export const generateHTML = (plans, styles, header) => {
     
     <div class="billing-toggle">
       <div class="toggle-container">
-        <button class="toggle-btn active" id="monthlyBtn" onclick="switchBilling('monthly')">Monthly</button>
-        <button class="toggle-btn" id="yearlyBtn" onclick="switchBilling('yearly')">Yearly</button>
+        <button class="toggle-btn ${defaultPeriod === 'monthly' ? 'active' : ''}" id="monthlyBtn" onclick="switchBilling('monthly')">Monthly</button>
+        <button class="toggle-btn ${defaultPeriod === 'yearly' ? 'active' : ''}" id="yearlyBtn" onclick="switchBilling('yearly')">Yearly</button>
       </div>
     </div>
     
@@ -284,7 +363,7 @@ export const generateHTML = (plans, styles, header) => {
   </div>
   
   <script>
-    let currentBilling = 'monthly';
+    let currentBilling = '${defaultPeriod}';
     
     function switchBilling(period) {
       currentBilling = period;
@@ -302,20 +381,74 @@ export const generateHTML = (plans, styles, header) => {
       });
       
       document.querySelectorAll('.price-note').forEach(el => {
-        if (el.dataset.monthlyText && el.dataset.yearlyText) {
-          const text = period === 'monthly' ? el.dataset.monthlyText : el.dataset.yearlyText;
+        // Check if equivalent price should be shown for current period
+        const shouldShow = period === 'monthly' 
+          ? el.dataset.monthlyShow === 'true'
+          : el.dataset.yearlyShow === 'true';
+        
+        if (!shouldShow) {
+          el.style.visibility = 'hidden';
+          el.textContent = '\u00A0';
+          return;
+        }
+        
+        el.style.visibility = 'visible';
+        
+        // Get template for current period
+        const template = period === 'monthly' 
+          ? el.dataset.monthlyTemplate
+          : el.dataset.yearlyTemplate;
+        
+        // If template exists, calculate and replace placeholders
+        if (template && template.trim()) {
+          const monthlyPrice = parseFloat(el.dataset.monthlyPrice) || 0;
+          const yearlyPrice = parseFloat(el.dataset.yearlyPrice) || 0;
+          
+          let savings = 0;
+          let equivalent = 0;
+          
+          if (period === 'monthly' && yearlyPrice > 0) {
+            const totalMonthlyPrice = monthlyPrice * 12;
+            savings = Math.round(totalMonthlyPrice - yearlyPrice);
+            equivalent = Math.round(yearlyPrice / 12);
+          } else if (period === 'yearly' && yearlyPrice > 0) {
+            equivalent = Math.round(yearlyPrice / 12);
+            savings = 0;
+          }
+          
+          const text = template
+            .replace(/{savings}/g, 'CHF ' + savings)
+            .replace(/{equivalent}/g, 'CHF ' + equivalent);
           el.textContent = text;
+        } else if (el.dataset.monthlyText && el.dataset.yearlyText) {
+          // Use pre-calculated text if no template
+          const text = period === 'monthly' ? el.dataset.monthlyText : el.dataset.yearlyText;
+          el.textContent = text || '\u00A0';
         }
       });
       
-      // Switch action buttons/embeds based on billing period
+      // Switch action buttons/embeds or show promotional text based on billing period
       document.querySelectorAll('.pricing-card').forEach(card => {
         const actionContainer = card.querySelector('.action-container');
         if (actionContainer) {
-          const actionHTML = period === 'monthly' 
-            ? decodeURIComponent(card.dataset.monthlyAction)
-            : decodeURIComponent(card.dataset.yearlyAction);
-          actionContainer.innerHTML = actionHTML;
+          // Check for promotional text for current period
+          const hasPromo = period === 'monthly' 
+            ? card.dataset.hasMonthlyPromo === 'true'
+            : card.dataset.hasYearlyPromo === 'true';
+          
+          const promotionalHTML = period === 'monthly'
+            ? decodeURIComponent(card.dataset.monthlyPromo || '')
+            : decodeURIComponent(card.dataset.yearlyPromo || '');
+          
+          // Show promotional text if it exists, otherwise show action
+          if (hasPromo && promotionalHTML) {
+            actionContainer.innerHTML = promotionalHTML;
+          } else {
+            const actionHTML = period === 'monthly' 
+              ? decodeURIComponent(card.dataset.monthlyAction)
+              : decodeURIComponent(card.dataset.yearlyAction);
+            actionContainer.innerHTML = actionHTML;
+          }
         }
       });
     }

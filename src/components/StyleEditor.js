@@ -5,31 +5,34 @@ export default function StyleEditor({ styles, setStyles }) {
     <div>
       <h3 className="font-semibold mb-4" style={{ color: styles.textColor }}>Styling</h3>
       <div className="space-y-3">
-        <div>
-          <label className="block text-sm mb-1" style={{ color: styles.textColor }}>Primary Color</label>
+        <div className="flex items-center justify-between">
+          <label className="text-sm" style={{ color: styles.textColor }}>Primary Color</label>
           <input
             type="color"
             value={styles.primaryColor}
             onChange={(e) => setStyles({...styles, primaryColor: e.target.value})}
-            className="w-full h-10 rounded cursor-pointer"
+            className="w-12 h-8 rounded cursor-pointer border"
+            style={{ borderColor: '#d1d5db' }}
           />
         </div>
-        <div>
-          <label className="block text-sm mb-1" style={{ color: styles.textColor }}>Accent Color</label>
+        <div className="flex items-center justify-between">
+          <label className="text-sm" style={{ color: styles.textColor }}>Accent Color</label>
           <input
             type="color"
             value={styles.accentColor}
             onChange={(e) => setStyles({...styles, accentColor: e.target.value})}
-            className="w-full h-10 rounded cursor-pointer"
+            className="w-12 h-8 rounded cursor-pointer border"
+            style={{ borderColor: '#d1d5db' }}
           />
         </div>
-        <div>
-          <label className="block text-sm mb-1" style={{ color: styles.textColor }}>Background Color</label>
+        <div className="flex items-center justify-between">
+          <label className="text-sm" style={{ color: styles.textColor }}>Background Color</label>
           <input
             type="color"
             value={styles.backgroundColor}
             onChange={(e) => setStyles({...styles, backgroundColor: e.target.value})}
-            className="w-full h-10 rounded cursor-pointer"
+            className="w-12 h-8 rounded cursor-pointer border"
+            style={{ borderColor: '#d1d5db' }}
           />
         </div>
         <div>

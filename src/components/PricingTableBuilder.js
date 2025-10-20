@@ -9,16 +9,24 @@ import PricingPreview from './PricingPreview';
 import ExportModal from './ExportModal';
 
 export default function PricingTableBuilder() {
-  const [billingPeriod, setBillingPeriod] = useState('monthly');
+  const [billingPeriod, setBillingPeriod] = useState(defaultHeader.defaultBillingPeriod || 'monthly');
   const [showEditor, setShowEditor] = useState(true);
   const [showExportModal, setShowExportModal] = useState(false);
   const [copySuccess, setCopySuccess] = useState(false);
-  const [collapsedPlans, setCollapsedPlans] = useState({});
   const [draggedPlan, setDraggedPlan] = useState(null);
   
   const [plans, setPlans] = useState(defaultPlans);
   const [styles, setStyles] = useState(defaultStyles);
   const [header, setHeader] = useState(defaultHeader);
+  
+  // Initialize all plans as collapsed
+  const [collapsedPlans, setCollapsedPlans] = useState(() => {
+    const collapsed = {};
+    defaultPlans.forEach(plan => {
+      collapsed[plan.id] = true;
+    });
+    return collapsed;
+  });
 
   const updatePlan = (id, field, value) => {
     setPlans(plans.map(p => p.id === id ? { ...p, [field]: value } : p));

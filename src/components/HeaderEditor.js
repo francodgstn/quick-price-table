@@ -54,6 +54,35 @@ export default function HeaderEditor({ header, setHeader, styles }) {
             </div>
           </>
         )}
+        
+        <div>
+          <label className="block text-sm mb-2" style={{ color: styles.textColor }}>Default Billing Period</label>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setHeader({...header, defaultBillingPeriod: 'monthly'})}
+              className={`flex-1 px-3 py-2 rounded text-sm transition-all ${header.defaultBillingPeriod !== 'yearly' ? 'font-semibold' : ''}`}
+              style={{
+                backgroundColor: header.defaultBillingPeriod !== 'yearly' ? styles.primaryColor : '#f3f4f6',
+                color: header.defaultBillingPeriod !== 'yearly' ? 'white' : styles.textColor
+              }}
+            >
+              Monthly
+            </button>
+            <button
+              onClick={() => setHeader({...header, defaultBillingPeriod: 'yearly'})}
+              className={`flex-1 px-3 py-2 rounded text-sm transition-all ${header.defaultBillingPeriod === 'yearly' ? 'font-semibold' : ''}`}
+              style={{
+                backgroundColor: header.defaultBillingPeriod === 'yearly' ? styles.primaryColor : '#f3f4f6',
+                color: header.defaultBillingPeriod === 'yearly' ? 'white' : styles.textColor
+              }}
+            >
+              Yearly
+            </button>
+          </div>
+          <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>
+            Which billing period to show by default when the page loads
+          </p>
+        </div>
       </div>
     </div>
   );

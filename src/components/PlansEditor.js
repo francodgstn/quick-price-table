@@ -35,16 +35,23 @@ export default function PlansEditor({
         buttonText: 'Get Started',
         buttonLink: '',
         embedCode: '',
-        useEmbed: false
+        useEmbed: false,
+        openInNewTab: true,
+        promotionalText: '',
+        showEquivalentPrice: true,
+        equivalentTemplate: ''
       },
       yearly: {
         buttonText: 'Get Started',
         buttonLink: '',
         embedCode: '',
-        useEmbed: false
+        useEmbed: false,
+        openInNewTab: true,
+        promotionalText: '',
+        showEquivalentPrice: true,
+        equivalentTemplate: ''
       },
-      isFeatured: false,
-      showEquivalentPrice: true
+      isFeatured: false
     };
     setPlans([...plans, newPlan]);
   };
