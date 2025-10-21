@@ -4,7 +4,7 @@
 
 A React-based pricing table builder for creating beautiful, responsive pricing tables with customizable styles and features.
 
-🔗 **Live Demo:** [https://YOUR-USERNAME.github.io/quick-price-table](https://YOUR-USERNAME.github.io/quick-price-table)
+🔗 **Live Demo:** [https://francodgstn.github.io/quick-price-table](https://francodgstn.github.io/quick-price-table)
 
 ## Features
 
@@ -27,7 +27,7 @@ A React-based pricing table builder for creating beautiful, responsive pricing t
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR-USERNAME/quick-price-table.git
+git clone https://github.com/francodgstn/quick-price-table.git
 cd quick-price-table
 
 # Install dependencies
