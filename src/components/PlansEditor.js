@@ -58,18 +58,17 @@ export default function PlansEditor({
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="font-semibold" style={{ color: styles.textColor }}>Plans</h3>
-        {plans.length < 4 && (
+      {plans.length < 4 && (
+        <div className="mb-4 flex justify-end">
           <button
             onClick={addPlan}
-            className="px-3 py-1 rounded flex items-center gap-1 text-sm"
+            className="px-3 py-2 rounded flex items-center gap-2 text-sm font-medium"
             style={{ backgroundColor: styles.primaryColor, color: 'white' }}
           >
             <Plus size={16} /> Add Plan
           </button>
-        )}
-      </div>
+        </div>
+      )}
 
       <div className="space-y-4">
         {plans.map((plan, idx) => (

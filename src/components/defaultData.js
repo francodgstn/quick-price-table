@@ -1,7 +1,7 @@
 export const defaultPlans = [
   {
     id: 1,
-    name: 'Your Fist Month 🚀',
+    name: 'Your First Month 🚀',
     monthlyPrice: 55,
     yearlyPrice: 0,
     description: 'Best option to get started',
@@ -31,15 +31,15 @@ export const defaultPlans = [
       embedCode: '',
       useEmbed: false,
       openInNewTab: true,
-      promotionalText: '🎁 Get it for FREE - Choose a yearly plan!',
+      promotionalText: '🎁 Get it for FREE, choose a yearly plan!',
       showEquivalentPrice: true,
-      equivalentTemplate: ''
+      equivalentTemplate: 'FREE with a yearly plan!'
     },
     isFeatured: true
   },
   {
     id: 2,
-    name: 'Students',
+    name: 'Students 👍',
     monthlyPrice: 70,
     yearlyPrice: 660,
     description: 'Special rate for students',
@@ -73,13 +73,13 @@ export const defaultPlans = [
       openInNewTab: true,
       promotionalText: '',
       showEquivalentPrice: true,
-      equivalentTemplate: 'Only {equivalent} per month'
+      equivalentTemplate: 'Save {savings_vs_monthly} vs monthly'
     },
     isFeatured: false
   },
   {
     id: 3,
-    name: 'Standard',
+    name: 'Standard 👊',
     monthlyPrice: 85,
     yearlyPrice: 840,
     description: 'Complete training for body and mind',
@@ -112,7 +112,7 @@ export const defaultPlans = [
       openInNewTab: true,
       promotionalText: '',
       showEquivalentPrice: true,
-      equivalentTemplate: 'Only {equivalent} per month'
+      equivalentTemplate: 'Save {savings_vs_monthly} vs monthly'
     },
     isFeatured: false
   }
@@ -121,17 +121,20 @@ export const defaultPlans = [
 export const defaultStyles = {
   primaryColor: '#1c1c1c',
   accentColor: '#cc0000',
-  backgroundColor: '#f9fafb',
+  backgroundColor: '#efefef',
   textColor: '#1f2937',
   fontFamily: 'Montserrat',
   borderRadius: '12',
-  cardShadow: 'lg'
+  cardShadow: 'lg',
+  layoutMode: 'responsive', // 'responsive' or 'horizontal-scroll'
+  compactMode: false, // when true, features are collapsed by default
+  showFreeForZeroPrice: true // when true, display "FREE" instead of "CHF 0"
 };
 
 export const defaultHeader = {
-  show: true,
+  show: false,
   title: 'Begin your Martial Arts journey today!',
   subtitle: 'Join our Hwalmoodo Kickboxing community in Basel',
   featuredBadgeText: 'Get Started',
-  defaultBillingPeriod: 'yearly'
+  defaultBillingPeriod: 'monthly'
 };

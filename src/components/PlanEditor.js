@@ -220,12 +220,12 @@ export default function PlanEditor({
                     type="text"
                     value={plan.monthly?.equivalentTemplate || ''}
                     onChange={(e) => updatePlan(plan.id, 'monthly', { ...plan.monthly, equivalentTemplate: e.target.value })}
-                    placeholder="e.g., Save {savings} annually"
+                    placeholder="e.g., Save {savings_vs_monthly} with yearly plan"
                     className="w-full border rounded px-2 py-1 text-sm"
                     style={{ borderColor: '#d1d5db' }}
                   />
                   <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>
-                    Use {'{savings}'} for savings amount, {'{equivalent}'} for equivalent rate
+                    Placeholders: {'{savings_vs_monthly}'}, {'{yearly_rate_equivalent}'}, {'{monthly_rate}'}, {'{yearly_rate}'}
                   </p>
                 </div>
               )}
@@ -376,12 +376,12 @@ export default function PlanEditor({
                     type="text"
                     value={plan.yearly?.equivalentTemplate || ''}
                     onChange={(e) => updatePlan(plan.id, 'yearly', { ...plan.yearly, equivalentTemplate: e.target.value })}
-                    placeholder="e.g., Only {equivalent} per month"
+                    placeholder="e.g., Only {yearly_rate_equivalent} per month"
                     className="w-full border rounded px-2 py-1 text-sm"
                     style={{ borderColor: '#d1d5db' }}
                   />
                   <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>
-                    Use {'{savings}'} for savings amount, {'{equivalent}'} for equivalent rate
+                    Placeholders: {'{savings_vs_monthly}'}, {'{yearly_rate_equivalent}'}, {'{monthly_rate}'}, {'{yearly_rate}'}
                   </p>
                 </div>
               )}

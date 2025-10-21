@@ -1,7 +1,16 @@
-import React from 'react';
-import { Check, X } from 'lucide-react';
+import React, { useState } from 'react';
+import { Check, X, ChevronDown, ChevronUp } from 'lucide-react';
 
 export default function PricingPreview({ plans, styles, header, billingPeriod, setBillingPeriod }) {
+  const [expandedCards, setExpandedCards] = useState({});
+  
+  const toggleCard = (planId) => {
+    setExpandedCards(prev => ({
+      ...prev,
+      [planId]: !prev[planId]
+    }));
+  };
+  
   const getPrice = (plan) => {
     return billingPeriod === 'monthly' ? plan.monthlyPrice : plan.yearlyPrice;
   };
@@ -16,41 +25,49 @@ export default function PricingPreview({ plans, styles, header, billingPeriod, s
     }
     
     // Calculate the values
-    let savings = 0;
-    let equivalent = 0;
+    const monthlyRate = plan.monthlyPrice;
+    const yearlyRate = plan.yearlyPrice;
+    let savingsVsMonthly = 0;
+    let yearlyRateEquivalent = 0;
     
-    if (billingPeriod === 'monthly' && plan.yearlyPrice > 0) {
+    // Always calculate savings and equivalent if we have both prices
+    if (plan.yearlyPrice > 0 && plan.monthlyPrice > 0) {
       const totalMonthlyPrice = plan.monthlyPrice * 12;
-      savings = Math.round(totalMonthlyPrice - plan.yearlyPrice);
-      equivalent = Math.round(plan.yearlyPrice / 12);
-    } else if (billingPeriod === 'yearly' && plan.yearlyPrice > 0) {
-      equivalent = Math.round(plan.yearlyPrice / 12);
-      savings = 0;
+      savingsVsMonthly = Math.round(totalMonthlyPrice - plan.yearlyPrice);
+      yearlyRateEquivalent = Math.round(plan.yearlyPrice / 12);
     }
     
     // If template is provided, use it with placeholders
     const template = currentConfig?.equivalentTemplate;
     if (template && template.trim()) {
       return template
-        .replace(/{savings}/g, `CHF ${savings}`)
-        .replace(/{equivalent}/g, `CHF ${equivalent}`);
+        .replace(/{savings_vs_monthly}/g, `CHF ${savingsVsMonthly}`)
+        .replace(/{yearly_rate_equivalent}/g, `CHF ${yearlyRateEquivalent}`)
+        .replace(/{monthly_rate}/g, `CHF ${monthlyRate}`)
+        .replace(/{yearly_rate}/g, `CHF ${yearlyRate}`)
+        // Keep old placeholders for backward compatibility
+        .replace(/{savings}/g, `CHF ${savingsVsMonthly}`)
+        .replace(/{equivalent}/g, `CHF ${yearlyRateEquivalent}`);
     }
     
     // Default templates
     if (billingPeriod === 'monthly' && plan.yearlyPrice > 0) {
-      if (savings > 0) {
-        return `Save CHF ${savings} with annual billing`;
+      if (savingsVsMonthly > 0) {
+        return `Save CHF ${savingsVsMonthly} with annual billing`;
       }
-      return `CHF ${equivalent} per month if billed annually`;
+      return `CHF ${yearlyRateEquivalent} per month if billed annually`;
     } else if (billingPeriod === 'yearly' && plan.yearlyPrice > 0) {
-      return `CHF ${equivalent} per month`;
+      return `CHF ${yearlyRateEquivalent} per month`;
     }
     
     return '';
   };
 
   return (
-    <div className="flex-1 p-8 overflow-y-auto">
+    <div className="flex-1 p-8 overflow-y-auto" style={{ 
+      backgroundColor: styles.backgroundColor,
+      fontFamily: styles.fontFamily
+    }}>
       <div className="max-w-6xl mx-auto">
         {header.show && (
           <div className="text-center mb-12">
@@ -92,21 +109,51 @@ export default function PricingPreview({ plans, styles, header, billingPeriod, s
           </div>
         </div>
 
-        <div className={`grid gap-6 mb-8 ${
-          plans.length === 1 ? 'max-w-sm mx-auto' :
-          plans.length === 2 ? 'grid-cols-2 max-w-4xl mx-auto' :
-          plans.length === 3 ? 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3' :
-          'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
-        }`}>
+        <div className={styles.layoutMode === 'horizontal-scroll' 
+          ? 'relative mb-8' 
+          : 'mb-8'
+        }>
+          {styles.layoutMode === 'horizontal-scroll' && (
+            <div className="absolute right-0 top-0 bottom-0 w-16 pointer-events-none z-10" 
+                 style={{ 
+                   background: `linear-gradient(to left, ${styles.backgroundColor}, transparent)`,
+                   opacity: 0.9
+                 }} 
+            />
+          )}
+          
+          <div className={styles.layoutMode === 'horizontal-scroll' 
+            ? 'flex gap-6 pt-8 pb-8 pl-6 snap-x snap-mandatory scroll-smooth' 
+            : `grid gap-6 ${
+                plans.length === 1 ? 'max-w-sm mx-auto' :
+                plans.length === 2 ? 'grid-cols-2 max-w-4xl mx-auto' :
+                plans.length === 3 ? 'grid-cols-1 md:grid-cols-3' :
+                'grid-cols-1 md:grid-cols-2 lg:grid-cols-4'
+              }`
+          }
+          style={styles.layoutMode === 'horizontal-scroll' ? {
+            overflowX: 'auto',
+            overflowY: 'visible',
+            scrollbarWidth: 'thin',
+            scrollbarColor: `${styles.accentColor} ${styles.backgroundColor}`,
+            WebkitOverflowScrolling: 'touch'
+          } : {}}>
           {plans.map((plan) => (
             <div
               key={plan.id}
-              className={`relative p-6 transition-all ${plan.isFeatured ? 'transform scale-105' : ''}`}
+              className={`relative p-6 transition-all ${plan.isFeatured ? 'transform scale-105' : ''} ${
+                styles.layoutMode === 'horizontal-scroll' ? 'flex-shrink-0 snap-center' : ''
+              }`}
               style={{
                 backgroundColor: 'white',
                 borderRadius: `${styles.borderRadius}px`,
                 border: plan.isFeatured ? `2px solid ${styles.accentColor}` : '1px solid #e5e7eb',
-                boxShadow: plan.isFeatured ? '0 10px 25px rgba(0,0,0,0.1)' : '0 1px 3px rgba(0,0,0,0.1)'
+                boxShadow: plan.isFeatured ? '0 10px 25px rgba(0,0,0,0.1)' : '0 1px 3px rgba(0,0,0,0.1)',
+                ...(styles.layoutMode === 'horizontal-scroll' ? { 
+                  minWidth: '280px',
+                  width: 'calc(70vw - 2rem)',
+                  maxWidth: '400px'
+                } : {})
               }}
             >
               {plan.isFeatured && (
@@ -122,12 +169,20 @@ export default function PricingPreview({ plans, styles, header, billingPeriod, s
                 <h3 className="text-xl font-bold mb-2" style={{ color: styles.textColor }}>{plan.name}</h3>
                 <p className="text-sm mb-4" style={{ color: '#6b7280' }}>{plan.description}</p>
                 <div className="mb-2">
-                  <span className="text-4xl font-bold" style={{ color: styles.textColor }}>
-                    CHF {getPrice(plan)}
-                  </span>
-                  <span className="text-sm" style={{ color: '#6b7280' }}>
-                    /{billingPeriod === 'monthly' ? 'month' : 'year'}
-                  </span>
+                  {getPrice(plan) === 0 && styles.showFreeForZeroPrice !== false ? (
+                    <span className="text-4xl font-bold" style={{ color: styles.textColor }}>
+                      FREE
+                    </span>
+                  ) : (
+                    <>
+                      <span className="text-4xl font-bold" style={{ color: styles.textColor }}>
+                        CHF {getPrice(plan)}
+                      </span>
+                      <span className="text-sm" style={{ color: '#6b7280' }}>
+                        /{billingPeriod === 'monthly' ? 'month' : 'year'}
+                      </span>
+                    </>
+                  )}
                 </div>
                 <p className="text-xs" style={{ 
                   color: (() => {
@@ -145,7 +200,25 @@ export default function PricingPreview({ plans, styles, header, billingPeriod, s
                 </p>
               </div>
 
-              <ul className="space-y-3 mb-6">
+              {styles.compactMode && (
+                <button
+                  onClick={() => toggleCard(plan.id)}
+                  className="w-full flex items-center justify-center gap-2 py-2 mb-3 text-sm font-medium transition-all"
+                  style={{ color: styles.accentColor }}
+                >
+                  {expandedCards[plan.id] ? (
+                    <>
+                      Hide Features <ChevronUp size={16} />
+                    </>
+                  ) : (
+                    <>
+                      Show Features <ChevronDown size={16} />
+                    </>
+                  )}
+                </button>
+              )}
+
+              <ul className={`space-y-3 mb-6 ${styles.compactMode && !expandedCards[plan.id] ? 'hidden' : ''}`}>
                 {plan.features.map((feature, idx) => (
                   <li key={idx} className="flex items-start gap-2 text-sm">
                     {feature.included ? (
@@ -208,6 +281,7 @@ export default function PricingPreview({ plans, styles, header, billingPeriod, s
               })()}
             </div>
           ))}
+          </div>
         </div>
       </div>
     </div>

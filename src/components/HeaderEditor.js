@@ -2,25 +2,23 @@ import React from 'react';
 
 export default function HeaderEditor({ header, setHeader, styles }) {
   return (
-    <div>
-      <h3 className="font-semibold mb-4" style={{ color: styles.textColor }}>Header</h3>
-      <div className="space-y-3">
-        <div className="flex items-center gap-2">
-          <input
-            type="checkbox"
-            id="showHeader"
-            checked={header.show}
-            onChange={(e) => setHeader({...header, show: e.target.checked})}
-            className="w-4 h-4"
-          />
-          <label htmlFor="showHeader" className="text-sm" style={{ color: styles.textColor }}>
+    <div className="space-y-3">
+      <div className="flex items-center gap-2">
+        <input
+          type="checkbox"
+          id="showHeader"
+          checked={header.show}
+          onChange={(e) => setHeader({...header, show: e.target.checked})}
+          className="w-4 h-4"
+        />
+        <label htmlFor="showHeader" className="text-sm text-gray-700">
             Show Header
           </label>
         </div>
         {header.show && (
           <>
             <div>
-              <label className="block text-sm mb-1" style={{ color: styles.textColor }}>Title</label>
+              <label className="block text-sm mb-1 text-gray-700">Title</label>
               <input
                 type="text"
                 value={header.title}
@@ -31,7 +29,7 @@ export default function HeaderEditor({ header, setHeader, styles }) {
               />
             </div>
             <div>
-              <label className="block text-sm mb-1" style={{ color: styles.textColor }}>Subtitle</label>
+              <label className="block text-sm mb-1 text-gray-700">Subtitle</label>
               <input
                 type="text"
                 value={header.subtitle}
@@ -42,7 +40,7 @@ export default function HeaderEditor({ header, setHeader, styles }) {
               />
             </div>
             <div>
-              <label className="block text-sm mb-1" style={{ color: styles.textColor }}>Featured Badge Text</label>
+              <label className="block text-sm mb-1 text-gray-700">Featured Badge Text</label>
               <input
                 type="text"
                 value={header.featuredBadgeText || 'Most Popular'}
@@ -56,14 +54,14 @@ export default function HeaderEditor({ header, setHeader, styles }) {
         )}
         
         <div>
-          <label className="block text-sm mb-2" style={{ color: styles.textColor }}>Default Billing Period</label>
+          <label className="block text-sm mb-2 text-gray-700">Default Billing Period</label>
           <div className="flex gap-2">
             <button
               onClick={() => setHeader({...header, defaultBillingPeriod: 'monthly'})}
               className={`flex-1 px-3 py-2 rounded text-sm transition-all ${header.defaultBillingPeriod !== 'yearly' ? 'font-semibold' : ''}`}
               style={{
                 backgroundColor: header.defaultBillingPeriod !== 'yearly' ? styles.primaryColor : '#f3f4f6',
-                color: header.defaultBillingPeriod !== 'yearly' ? 'white' : styles.textColor
+                color: header.defaultBillingPeriod !== 'yearly' ? 'white' : '#374151'
               }}
             >
               Monthly
@@ -73,7 +71,7 @@ export default function HeaderEditor({ header, setHeader, styles }) {
               className={`flex-1 px-3 py-2 rounded text-sm transition-all ${header.defaultBillingPeriod === 'yearly' ? 'font-semibold' : ''}`}
               style={{
                 backgroundColor: header.defaultBillingPeriod === 'yearly' ? styles.primaryColor : '#f3f4f6',
-                color: header.defaultBillingPeriod === 'yearly' ? 'white' : styles.textColor
+                color: header.defaultBillingPeriod === 'yearly' ? 'white' : '#374151'
               }}
             >
               Yearly
@@ -83,7 +81,7 @@ export default function HeaderEditor({ header, setHeader, styles }) {
             Which billing period to show by default when the page loads
           </p>
         </div>
-      </div>
     </div>
   );
 }
+

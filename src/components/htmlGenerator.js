@@ -101,6 +101,15 @@ export const generateHTML = (plans, styles, header) => {
       ? (monthlyPromotionalHTML || monthlyActionHTML)
       : (yearlyPromotionalHTML || yearlyActionHTML);
     
+    // Format initial price display
+    const showFreeForZero = styles.showFreeForZeroPrice !== false;
+    const initialPriceDisplay = initialPrice === 0 && showFreeForZero 
+      ? 'FREE'
+      : `CHF ${initialPrice}`;
+    const initialPeriodDisplay = initialPrice === 0 && showFreeForZero 
+      ? '' 
+      : `/${initialPeriod}`;
+    
     const priceNoteHTML = `
           <p class="price-note" 
              data-monthly-text="${savingsTextMonthly}" 
@@ -122,20 +131,33 @@ export const generateHTML = (plans, styles, header) => {
            data-monthly-promo="${encodeURIComponent(monthlyPromotionalHTML)}"
            data-yearly-promo="${encodeURIComponent(yearlyPromotionalHTML)}"
            data-has-monthly-promo="${monthlyAction.promotionalText ? 'true' : 'false'}"
-           data-has-yearly-promo="${yearlyAction.promotionalText ? 'true' : 'false'}">
+           data-has-yearly-promo="${yearlyAction.promotionalText ? 'true' : 'false'}"
+           data-plan-id="${plan.id}">
         ${plan.isFeatured ? `<div class="featured-badge">${featuredBadgeText}</div>` : ''}
         
         <div class="card-header">
           <h3 class="plan-name">${plan.name}</h3>
           <p class="plan-description">${plan.description}</p>
           <div class="price-container">
-            <span class="price" data-monthly="${plan.monthlyPrice}" data-yearly="${plan.yearlyPrice}">CHF ${initialPrice}</span>
-            <span class="price-period">/${initialPeriod}</span>
+            <span class="price" data-monthly="${plan.monthlyPrice}" data-yearly="${plan.yearlyPrice}">${initialPriceDisplay}</span>
+            <span class="price-period" style="${initialPrice === 0 && showFreeForZero ? 'display: none;' : ''}">${initialPeriodDisplay}</span>
           </div>
           ${priceNoteHTML}
         </div>
         
-        <ul class="features">
+        ${styles.compactMode ? `
+        <button class="toggle-features" onclick="toggleFeatures(${plan.id})">
+          <span class="toggle-text">Show Features</span>
+          <svg class="chevron chevron-down" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${styles.accentColor}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"></polyline>
+          </svg>
+          <svg class="chevron chevron-up" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${styles.accentColor}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;">
+            <polyline points="18 15 12 9 6 15"></polyline>
+          </svg>
+        </button>
+        ` : ''}
+        
+        <ul class="features${styles.compactMode ? ' collapsed' : ''}" id="features-${plan.id}">
           ${featuresHTML}
         </ul>
         
@@ -164,6 +186,8 @@ export const generateHTML = (plans, styles, header) => {
       background-color: ${styles.backgroundColor};
       color: ${styles.textColor};
       padding: 2rem 1rem;
+      min-height: fit-content;
+      overflow: visible;
     }
     .container {
       max-width: 1200px;
@@ -212,18 +236,60 @@ export const generateHTML = (plans, styles, header) => {
     .toggle-btn:not(.active) {
       color: ${styles.textColor};
     }
+    .pricing-grid-wrapper {
+      position: relative;
+      margin-bottom: 2rem;
+    }
+    .pricing-grid-wrapper.horizontal-scroll::after {
+      content: '';
+      position: absolute;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 4rem;
+      background: linear-gradient(to left, ${styles.backgroundColor}, transparent);
+      pointer-events: none;
+      z-index: 10;
+      opacity: 0.9;
+    }
     .pricing-grid {
       display: grid;
       gap: 1.5rem;
       grid-template-columns: 1fr;
     }
+    .pricing-grid.horizontal-scroll {
+      display: flex;
+      overflow-x: auto;
+      overflow-y: visible;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+      scrollbar-color: ${styles.accentColor} ${styles.backgroundColor};
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+      padding-left: 1.5rem;
+    }
+    .pricing-grid.horizontal-scroll::-webkit-scrollbar {
+      height: 8px;
+    }
+    .pricing-grid.horizontal-scroll::-webkit-scrollbar-track {
+      background: ${styles.backgroundColor};
+      border-radius: 10px;
+    }
+    .pricing-grid.horizontal-scroll::-webkit-scrollbar-thumb {
+      background: ${styles.accentColor};
+      border-radius: 10px;
+    }
     @media (min-width: 768px) {
-      .pricing-grid.cols-2 { grid-template-columns: repeat(2, 1fr); max-width: 900px; margin: 0 auto; }
-      .pricing-grid.cols-3 { grid-template-columns: repeat(2, 1fr); }
+      .pricing-grid.cols-2:not(.horizontal-scroll) { grid-template-columns: repeat(2, 1fr); max-width: 900px; margin: 0 auto; }
+      .pricing-grid.cols-3:not(.horizontal-scroll) { grid-template-columns: repeat(3, 1fr); }
     }
     @media (min-width: 1024px) {
-      .pricing-grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
-      .pricing-grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+      .pricing-grid.cols-4:not(.horizontal-scroll) { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 1280px) {
+      .pricing-grid.cols-4:not(.horizontal-scroll) { grid-template-columns: repeat(4, 1fr); }
     }
     .pricing-card {
       position: relative;
@@ -233,6 +299,13 @@ export const generateHTML = (plans, styles, header) => {
       border: 1px solid #e5e7eb;
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
       transition: all 0.3s;
+    }
+    .horizontal-scroll .pricing-card {
+      flex-shrink: 0;
+      scroll-snap-align: center;
+      min-width: 280px;
+      width: calc(70vw - 2rem);
+      max-width: 400px;
     }
     .pricing-card.featured {
       border: 2px solid ${styles.accentColor};
@@ -285,6 +358,28 @@ export const generateHTML = (plans, styles, header) => {
     .features {
       list-style: none;
       margin-bottom: 1.5rem;
+    }
+    .features.collapsed {
+      display: none;
+    }
+    .toggle-features {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.5rem;
+      margin-bottom: 0.75rem;
+      background: none;
+      border: none;
+      color: ${styles.accentColor};
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .toggle-features:hover {
+      opacity: 0.8;
     }
     .feature-item {
       display: flex;
@@ -357,13 +452,36 @@ export const generateHTML = (plans, styles, header) => {
       </div>
     </div>
     
-    <div class="pricing-grid cols-${plans.length}">
-      ${plansHTML}
+    <div class="pricing-grid-wrapper ${styles.layoutMode === 'horizontal-scroll' ? 'horizontal-scroll' : ''}">
+      <div class="pricing-grid cols-${plans.length} ${styles.layoutMode === 'horizontal-scroll' ? 'horizontal-scroll' : ''}">
+        ${plansHTML}
+      </div>
     </div>
   </div>
   
   <script>
     let currentBilling = '${defaultPeriod}';
+    
+    function toggleFeatures(planId) {
+      const featuresEl = document.getElementById('features-' + planId);
+      const card = document.querySelector('[data-plan-id="' + planId + '"]');
+      const toggleBtn = card.querySelector('.toggle-features');
+      const toggleText = toggleBtn.querySelector('.toggle-text');
+      const chevronDown = toggleBtn.querySelector('.chevron-down');
+      const chevronUp = toggleBtn.querySelector('.chevron-up');
+      
+      if (featuresEl.classList.contains('collapsed')) {
+        featuresEl.classList.remove('collapsed');
+        toggleText.textContent = 'Hide Features';
+        chevronDown.style.display = 'none';
+        chevronUp.style.display = 'block';
+      } else {
+        featuresEl.classList.add('collapsed');
+        toggleText.textContent = 'Show Features';
+        chevronDown.style.display = 'block';
+        chevronUp.style.display = 'none';
+      }
+    }
     
     function switchBilling(period) {
       currentBilling = period;
@@ -373,11 +491,27 @@ export const generateHTML = (plans, styles, header) => {
       
       document.querySelectorAll('.price').forEach(el => {
         const price = period === 'monthly' ? el.dataset.monthly : el.dataset.yearly;
-        el.textContent = 'CHF ' + price;
+        const showFree = ${styles.showFreeForZeroPrice !== false ? 'true' : 'false'};
+        
+        if (price == 0 && showFree) {
+          el.textContent = 'FREE';
+        } else {
+          el.textContent = 'CHF ' + price;
+        }
       });
       
       document.querySelectorAll('.price-period').forEach(el => {
-        el.textContent = '/' + (period === 'monthly' ? 'month' : 'year');
+        const priceEl = el.previousElementSibling;
+        const price = period === 'monthly' ? priceEl.dataset.monthly : priceEl.dataset.yearly;
+        const showFree = ${styles.showFreeForZeroPrice !== false ? 'true' : 'false'};
+        
+        // Hide period text if showing FREE
+        if (price == 0 && showFree) {
+          el.style.display = 'none';
+        } else {
+          el.style.display = 'inline';
+          el.textContent = '/' + (period === 'monthly' ? 'month' : 'year');
+        }
       });
       
       document.querySelectorAll('.price-note').forEach(el => {
@@ -404,21 +538,26 @@ export const generateHTML = (plans, styles, header) => {
           const monthlyPrice = parseFloat(el.dataset.monthlyPrice) || 0;
           const yearlyPrice = parseFloat(el.dataset.yearlyPrice) || 0;
           
-          let savings = 0;
-          let equivalent = 0;
+          const monthlyRate = monthlyPrice;
+          const yearlyRate = yearlyPrice;
+          let savingsVsMonthly = 0;
+          let yearlyRateEquivalent = 0;
           
-          if (period === 'monthly' && yearlyPrice > 0) {
+          // Always calculate savings and equivalent if we have both prices
+          if (yearlyPrice > 0 && monthlyPrice > 0) {
             const totalMonthlyPrice = monthlyPrice * 12;
-            savings = Math.round(totalMonthlyPrice - yearlyPrice);
-            equivalent = Math.round(yearlyPrice / 12);
-          } else if (period === 'yearly' && yearlyPrice > 0) {
-            equivalent = Math.round(yearlyPrice / 12);
-            savings = 0;
+            savingsVsMonthly = Math.round(totalMonthlyPrice - yearlyPrice);
+            yearlyRateEquivalent = Math.round(yearlyPrice / 12);
           }
           
           const text = template
-            .replace(/{savings}/g, 'CHF ' + savings)
-            .replace(/{equivalent}/g, 'CHF ' + equivalent);
+            .replace(/{savings_vs_monthly}/g, 'CHF ' + savingsVsMonthly)
+            .replace(/{yearly_rate_equivalent}/g, 'CHF ' + yearlyRateEquivalent)
+            .replace(/{monthly_rate}/g, 'CHF ' + monthlyRate)
+            .replace(/{yearly_rate}/g, 'CHF ' + yearlyRate)
+            // Keep old placeholders for backward compatibility
+            .replace(/{savings}/g, 'CHF ' + savingsVsMonthly)
+            .replace(/{equivalent}/g, 'CHF ' + yearlyRateEquivalent);
           el.textContent = text;
         } else if (el.dataset.monthlyText && el.dataset.yearlyText) {
           // Use pre-calculated text if no template
@@ -452,6 +591,41 @@ export const generateHTML = (plans, styles, header) => {
         }
       });
     }
+    
+    // Auto-resize for Google Sites iframe embedding
+    function sendHeight() {
+      const height = document.documentElement.scrollHeight;
+      // Try multiple methods to communicate with parent frame
+      if (window.parent && window.parent !== window) {
+        // PostMessage API (most reliable for Google Sites)
+        window.parent.postMessage({
+          type: 'resize',
+          height: height
+        }, '*');
+        
+        // Also try legacy method
+        try {
+          window.parent.postMessage(height, '*');
+        } catch (e) {}
+      }
+    }
+    
+    // Send height on load and when content changes
+    window.addEventListener('load', sendHeight);
+    window.addEventListener('resize', sendHeight);
+    
+    // Send height after a short delay to ensure all content is rendered
+    setTimeout(sendHeight, 100);
+    setTimeout(sendHeight, 500);
+    setTimeout(sendHeight, 1000);
+    
+    // Watch for DOM changes and update height
+    const observer = new MutationObserver(sendHeight);
+    observer.observe(document.body, { 
+      childList: true, 
+      subtree: true, 
+      attributes: true 
+    });
   </script>
 </body>
 </html>`;
