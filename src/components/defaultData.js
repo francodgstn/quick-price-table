@@ -38,7 +38,7 @@ export const defaultData = {
       yearlyButtonText: 'Start Free',
       yearlyButtonLink: '#signup-free',
       actionEmbedCode: '',
-      featured: false,
+      isFeatured: false,
       monthlyPromo: '',
       yearlyPromo: ''
     },
@@ -63,7 +63,7 @@ export const defaultData = {
       yearlyButtonText: 'Save with Annual',
       yearlyButtonLink: '#signup-pro-yearly',
       actionEmbedCode: '',
-      featured: true,
+      isFeatured: true,
       monthlyPromo: '',
       yearlyPromo: 'Save {savings_vs_monthly} per year - Only {yearly_rate_equivalent}/month'
     },
@@ -88,7 +88,7 @@ export const defaultData = {
       yearlyButtonText: 'Contact Sales',
       yearlyButtonLink: '#contact-yearly',
       actionEmbedCode: '',
-      featured: false,
+      isFeatured: false,
       monthlyPromo: '',
       yearlyPromo: 'Best value - Save {savings_vs_monthly} with annual billing'
     }
