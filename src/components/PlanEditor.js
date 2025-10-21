@@ -36,9 +36,9 @@ export default function PlanEditor({
       >
         <div className="flex items-center gap-2">
           <GripVertical size={18} className="cursor-move" style={{ color: '#9ca3af' }} />
-          <span className="font-semibold" style={{ color: styles.textColor }}>{plan.name}</span>
+          <span className="font-semibold" style={{ color: '#1f2937' }}>{plan.name}</span>
           {plan.isFeatured && (
-            <Star size={14} fill={styles.accentColor} style={{ color: styles.accentColor }} />
+            <Star size={14} fill="#f59e0b" style={{ color: '#f59e0b' }} />
           )}
         </div>
         <div className="flex items-center gap-2">
@@ -54,9 +54,9 @@ export default function PlanEditor({
             </button>
           )}
           {collapsedPlans[plan.id] ? (
-            <ChevronDown size={18} style={{ color: styles.textColor }} />
+            <ChevronDown size={18} style={{ color: '#1f2937' }} />
           ) : (
-            <ChevronUp size={18} style={{ color: styles.textColor }} />
+            <ChevronUp size={18} style={{ color: '#1f2937' }} />
           )}
         </div>
       </div>
@@ -68,7 +68,7 @@ export default function PlanEditor({
             value={plan.name}
             onChange={(e) => updatePlan(plan.id, 'name', e.target.value)}
             className="font-semibold text-lg border rounded px-2 py-1 w-full"
-            style={{ color: styles.textColor, borderColor: '#d1d5db' }}
+            style={{ color: '#1f2937', borderColor: '#d1d5db' }}
           />
 
           <textarea
@@ -87,15 +87,15 @@ export default function PlanEditor({
               style={{ backgroundColor: '#f9fafb' }}
             >
               <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold" style={{ color: styles.textColor }}>Monthly Price & Action</span>
-                <span className="text-xs px-2 py-0.5 rounded" style={{ backgroundColor: styles.primaryColor, color: 'white' }}>
+                <span className="text-sm font-semibold" style={{ color: '#1f2937' }}>Monthly Price & Action</span>
+                <span className="text-xs px-2 py-0.5 rounded" style={{ backgroundColor: '#3b82f6', color: 'white' }}>
                   CHF {plan.monthlyPrice}
                 </span>
               </div>
               {monthlyActionCollapsed ? (
-                <ChevronDown size={16} style={{ color: styles.textColor }} />
+                <ChevronDown size={16} style={{ color: '#1f2937' }} />
               ) : (
-                <ChevronUp size={16} style={{ color: styles.textColor }} />
+                <ChevronUp size={16} style={{ color: '#1f2937' }} />
               )}
             </div>
             
@@ -119,8 +119,8 @@ export default function PlanEditor({
                 onClick={() => updatePlan(plan.id, 'monthly', { ...plan.monthly, useEmbed: false })}
                 className={`flex-1 px-3 py-2 rounded text-xs transition-all ${!plan.monthly?.useEmbed ? 'font-semibold' : ''}`}
                 style={{
-                  backgroundColor: !plan.monthly?.useEmbed ? styles.primaryColor : '#f3f4f6',
-                  color: !plan.monthly?.useEmbed ? 'white' : styles.textColor
+                  backgroundColor: !plan.monthly?.useEmbed ? '#3b82f6' : '#f3f4f6',
+                  color: !plan.monthly?.useEmbed ? 'white' : '#374151'
                 }}
               >
                 Button Link
@@ -129,8 +129,8 @@ export default function PlanEditor({
                 onClick={() => updatePlan(plan.id, 'monthly', { ...plan.monthly, useEmbed: true })}
                 className={`flex-1 px-3 py-2 rounded text-xs transition-all ${plan.monthly?.useEmbed ? 'font-semibold' : ''}`}
                 style={{
-                  backgroundColor: plan.monthly?.useEmbed ? styles.primaryColor : '#f3f4f6',
-                  color: plan.monthly?.useEmbed ? 'white' : styles.textColor
+                  backgroundColor: plan.monthly?.useEmbed ? '#3b82f6' : '#f3f4f6',
+                  color: plan.monthly?.useEmbed ? 'white' : '#374151'
                 }}
               >
                 Embed Code
@@ -243,15 +243,15 @@ export default function PlanEditor({
               style={{ backgroundColor: '#f9fafb' }}
             >
               <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold" style={{ color: styles.textColor }}>Yearly Price & Action</span>
-                <span className="text-xs px-2 py-0.5 rounded" style={{ backgroundColor: styles.accentColor, color: 'white' }}>
+                <span className="text-sm font-semibold" style={{ color: '#1f2937' }}>Yearly Price & Action</span>
+                <span className="text-xs px-2 py-0.5 rounded" style={{ backgroundColor: '#10b981', color: 'white' }}>
                   CHF {plan.yearlyPrice}
                 </span>
               </div>
               {yearlyActionCollapsed ? (
-                <ChevronDown size={16} style={{ color: styles.textColor }} />
+                <ChevronDown size={16} style={{ color: '#1f2937' }} />
               ) : (
-                <ChevronUp size={16} style={{ color: styles.textColor }} />
+                <ChevronUp size={16} style={{ color: '#1f2937' }} />
               )}
             </div>
             
@@ -269,14 +269,14 @@ export default function PlanEditor({
                 </div>
 
                 <div>
-                  <label className="text-xs font-semibold mb-2 block" style={{ color: styles.textColor }}>Action Type</label>
+                  <label className="text-xs font-semibold mb-2 block" style={{ color: '#1f2937' }}>Action Type</label>
                   <div className="flex gap-2 mb-2">
               <button
                 onClick={() => updatePlan(plan.id, 'yearly', { ...plan.yearly, useEmbed: false })}
                 className={`flex-1 px-3 py-2 rounded text-xs transition-all ${!plan.yearly?.useEmbed ? 'font-semibold' : ''}`}
                 style={{
-                  backgroundColor: !plan.yearly?.useEmbed ? styles.primaryColor : '#f3f4f6',
-                  color: !plan.yearly?.useEmbed ? 'white' : styles.textColor
+                  backgroundColor: !plan.yearly?.useEmbed ? '#10b981' : '#f3f4f6',
+                  color: !plan.yearly?.useEmbed ? 'white' : '#374151'
                 }}
               >
                 Button Link
@@ -285,8 +285,8 @@ export default function PlanEditor({
                 onClick={() => updatePlan(plan.id, 'yearly', { ...plan.yearly, useEmbed: true })}
                 className={`flex-1 px-3 py-2 rounded text-xs transition-all ${plan.yearly?.useEmbed ? 'font-semibold' : ''}`}
                 style={{
-                  backgroundColor: plan.yearly?.useEmbed ? styles.primaryColor : '#f3f4f6',
-                  color: plan.yearly?.useEmbed ? 'white' : styles.textColor
+                  backgroundColor: plan.yearly?.useEmbed ? '#10b981' : '#f3f4f6',
+                  color: plan.yearly?.useEmbed ? 'white' : '#374151'
                 }}
               >
                 Embed Code
@@ -395,8 +395,8 @@ export default function PlanEditor({
             onClick={() => setFeatured(plan.id)}
             className={`w-full px-3 py-1 rounded text-sm flex items-center justify-center gap-2 ${plan.isFeatured ? 'font-semibold' : ''}`}
             style={{
-              backgroundColor: plan.isFeatured ? styles.accentColor : '#f3f4f6',
-              color: plan.isFeatured ? 'white' : styles.textColor
+              backgroundColor: plan.isFeatured ? '#f59e0b' : '#f3f4f6',
+              color: plan.isFeatured ? 'white' : '#374151'
             }}
           >
             <Star size={14} fill={plan.isFeatured ? 'white' : 'none'} />
@@ -405,11 +405,11 @@ export default function PlanEditor({
 
           <div className="space-y-2">
             <div className="flex justify-between items-center">
-              <label className="text-xs font-semibold" style={{ color: styles.textColor }}>Features</label>
+              <label className="text-xs font-semibold" style={{ color: '#1f2937' }}>Features</label>
               <button
                 onClick={() => addFeature(plan.id)}
                 className="text-xs px-2 py-1 rounded"
-                style={{ backgroundColor: styles.primaryColor, color: 'white' }}
+                style={{ backgroundColor: '#3b82f6', color: 'white' }}
               >
                 + Add
               </button>

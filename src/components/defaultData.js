@@ -14,7 +14,8 @@ export const defaultData = {
     fontFamily: 'system-ui',
     layoutMode: 'responsive',
     compactMode: false,
-    showFreeForZeroPrice: true
+    showFreeForZeroPrice: true,
+    currency: 'CHF'
   },
   plans: [
     {

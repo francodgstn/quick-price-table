@@ -62,8 +62,8 @@ export default function PlansEditor({
         <div className="mb-4 flex justify-end">
           <button
             onClick={addPlan}
-            className="px-3 py-2 rounded flex items-center gap-2 text-sm font-medium"
-            style={{ backgroundColor: styles.primaryColor, color: 'white' }}
+            className="w-full px-4 py-3 rounded-lg font-medium flex items-center justify-center gap-2 transition-colors"
+            style={{ backgroundColor: '#3b82f6', color: 'white' }}
           >
             <Plus size={16} /> Add Plan
           </button>

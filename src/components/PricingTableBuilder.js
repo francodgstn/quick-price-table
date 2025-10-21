@@ -232,7 +232,7 @@ export default function PricingTableBuilder() {
                 onClick={() => setShowExportModal(true)}
                 className="px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors"
                 style={{ 
-                  backgroundColor: styles.accentColor,
+                  backgroundColor: '#10b981',
                   color: 'white'
                 }}
               >
@@ -243,7 +243,7 @@ export default function PricingTableBuilder() {
                 onClick={() => setShowEditor(!showEditor)}
                 className="px-4 py-2 rounded-lg font-medium flex items-center gap-2 transition-colors"
                 style={{ 
-                  backgroundColor: styles.primaryColor,
+                  backgroundColor: '#3b82f6',
                   color: 'white'
                 }}
               >

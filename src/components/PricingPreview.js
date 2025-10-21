@@ -24,6 +24,9 @@ export default function PricingPreview({ plans, styles, header, billingPeriod, s
       return '';
     }
     
+    // Get currency label
+    const currency = styles.currency || 'CHF';
+    
     // Calculate the values
     const monthlyRate = plan.monthlyPrice;
     const yearlyRate = plan.yearlyPrice;
@@ -41,23 +44,23 @@ export default function PricingPreview({ plans, styles, header, billingPeriod, s
     const template = currentConfig?.equivalentTemplate;
     if (template && template.trim()) {
       return template
-        .replace(/{savings_vs_monthly}/g, `CHF ${savingsVsMonthly}`)
-        .replace(/{yearly_rate_equivalent}/g, `CHF ${yearlyRateEquivalent}`)
-        .replace(/{monthly_rate}/g, `CHF ${monthlyRate}`)
-        .replace(/{yearly_rate}/g, `CHF ${yearlyRate}`)
+        .replace(/{savings_vs_monthly}/g, `${currency} ${savingsVsMonthly}`)
+        .replace(/{yearly_rate_equivalent}/g, `${currency} ${yearlyRateEquivalent}`)
+        .replace(/{monthly_rate}/g, `${currency} ${monthlyRate}`)
+        .replace(/{yearly_rate}/g, `${currency} ${yearlyRate}`)
         // Keep old placeholders for backward compatibility
-        .replace(/{savings}/g, `CHF ${savingsVsMonthly}`)
-        .replace(/{equivalent}/g, `CHF ${yearlyRateEquivalent}`);
+        .replace(/{savings}/g, `${currency} ${savingsVsMonthly}`)
+        .replace(/{equivalent}/g, `${currency} ${yearlyRateEquivalent}`);
     }
     
     // Default templates
     if (billingPeriod === 'monthly' && plan.yearlyPrice > 0) {
       if (savingsVsMonthly > 0) {
-        return `Save CHF ${savingsVsMonthly} with annual billing`;
+        return `Save ${currency} ${savingsVsMonthly} with annual billing`;
       }
-      return `CHF ${yearlyRateEquivalent} per month if billed annually`;
+      return `${currency} ${yearlyRateEquivalent} per month if billed annually`;
     } else if (billingPeriod === 'yearly' && plan.yearlyPrice > 0) {
-      return `CHF ${yearlyRateEquivalent} per month`;
+      return `${currency} ${yearlyRateEquivalent} per month`;
     }
     
     return '';
@@ -181,7 +184,7 @@ export default function PricingPreview({ plans, styles, header, billingPeriod, s
                   ) : (
                     <>
                       <span className="text-4xl font-bold" style={{ color: styles.textColor }}>
-                        CHF {getPrice(plan)}
+                        {styles.currency || 'CHF'} {getPrice(plan)}
                       </span>
                       <span className="text-sm" style={{ color: '#6b7280' }}>
                         /{billingPeriod === 'monthly' ? 'month' : 'year'}

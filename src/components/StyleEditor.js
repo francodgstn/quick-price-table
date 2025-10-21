@@ -65,6 +65,19 @@ export default function StyleEditor({ styles, setStyles }) {
           </select>
         </div>
         
+        <div className="flex items-center justify-between gap-3">
+          <label className="text-sm text-gray-700 whitespace-nowrap">Currency Label</label>
+          <input
+            type="text"
+            value={styles.currency || 'CHF'}
+            onChange={(e) => setStyles({...styles, currency: e.target.value})}
+            placeholder="CHF, USD, EUR..."
+            className="flex-1 px-3 py-2 border rounded text-sm"
+            style={{ borderColor: '#d1d5db' }}
+            maxLength="10"
+          />
+        </div>
+        
         <div>
           <label className="block text-sm mb-2 text-gray-700">Layout Mode</label>
           <div className="flex gap-2">
@@ -72,7 +85,7 @@ export default function StyleEditor({ styles, setStyles }) {
               onClick={() => setStyles({...styles, layoutMode: 'responsive'})}
               className={`flex-1 px-3 py-2 rounded text-xs transition-all ${styles.layoutMode !== 'horizontal-scroll' ? 'font-semibold' : ''}`}
               style={{
-                backgroundColor: styles.layoutMode !== 'horizontal-scroll' ? styles.primaryColor : '#f3f4f6',
+                backgroundColor: styles.layoutMode !== 'horizontal-scroll' ? '#3b82f6' : '#f3f4f6',
                 color: styles.layoutMode !== 'horizontal-scroll' ? 'white' : '#374151'
               }}
             >
@@ -82,7 +95,7 @@ export default function StyleEditor({ styles, setStyles }) {
               onClick={() => setStyles({...styles, layoutMode: 'horizontal-scroll'})}
               className={`flex-1 px-3 py-2 rounded text-xs transition-all ${styles.layoutMode === 'horizontal-scroll' ? 'font-semibold' : ''}`}
               style={{
-                backgroundColor: styles.layoutMode === 'horizontal-scroll' ? styles.primaryColor : '#f3f4f6',
+                backgroundColor: styles.layoutMode === 'horizontal-scroll' ? '#3b82f6' : '#f3f4f6',
                 color: styles.layoutMode === 'horizontal-scroll' ? 'white' : '#374151'
               }}
             >
@@ -101,7 +114,7 @@ export default function StyleEditor({ styles, setStyles }) {
               checked={styles.compactMode || false}
               onChange={(e) => setStyles({...styles, compactMode: e.target.checked})}
               className="w-4 h-4 rounded"
-              style={{ accentColor: styles.accentColor }}
+              style={{ accentColor: '#3b82f6' }}
             />
             Compact Mode
           </label>
@@ -117,7 +130,7 @@ export default function StyleEditor({ styles, setStyles }) {
               checked={styles.showFreeForZeroPrice !== false}
               onChange={(e) => setStyles({...styles, showFreeForZeroPrice: e.target.checked})}
               className="w-4 h-4 rounded"
-              style={{ accentColor: styles.accentColor }}
+              style={{ accentColor: '#3b82f6' }}
             />
             Show "FREE" for Zero Price
           </label>

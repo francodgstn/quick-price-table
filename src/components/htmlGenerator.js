@@ -1,5 +1,6 @@
 export const generateHTML = (plans, styles, header) => {
   const defaultPeriod = header.defaultBillingPeriod || 'monthly';
+  const currency = styles.currency || 'CHF';
   const fontLink = styles.fontFamily.includes('Montserrat') 
     ? '<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">'
     : '';
@@ -71,18 +72,18 @@ export const generateHTML = (plans, styles, header) => {
       const template = config?.equivalentTemplate;
       if (template && template.trim()) {
         return template
-          .replace(/{savings}/g, `CHF ${savings}`)
-          .replace(/{equivalent}/g, `CHF ${equivalent}`);
+          .replace(/{savings}/g, `${currency} ${savings}`)
+          .replace(/{equivalent}/g, `${currency} ${equivalent}`);
       }
       
       // Default templates
       if (isMonthly && plan.yearlyPrice > 0) {
         if (savings > 0) {
-          return `Save CHF ${savings} with annual billing`;
+          return `Save ${currency} ${savings} with annual billing`;
         }
-        return `CHF ${equivalent} per month if billed annually`;
+        return `${currency} ${equivalent} per month if billed annually`;
       } else if (!isMonthly && plan.yearlyPrice > 0) {
-        return `CHF ${equivalent} per month`;
+        return `${currency} ${equivalent} per month`;
       }
       return '';
     };
@@ -105,7 +106,7 @@ export const generateHTML = (plans, styles, header) => {
     const showFreeForZero = styles.showFreeForZeroPrice !== false;
     const initialPriceDisplay = initialPrice === 0 && showFreeForZero 
       ? 'FREE'
-      : `CHF ${initialPrice}`;
+      : `${currency} ${initialPrice}`;
     const initialPeriodDisplay = initialPrice === 0 && showFreeForZero 
       ? '' 
       : `/${initialPeriod}`;
@@ -496,7 +497,7 @@ export const generateHTML = (plans, styles, header) => {
         if (price == 0 && showFree) {
           el.textContent = 'FREE';
         } else {
-          el.textContent = 'CHF ' + price;
+          el.textContent = '${currency} ' + price;
         }
       });
       
@@ -551,13 +552,13 @@ export const generateHTML = (plans, styles, header) => {
           }
           
           const text = template
-            .replace(/{savings_vs_monthly}/g, 'CHF ' + savingsVsMonthly)
-            .replace(/{yearly_rate_equivalent}/g, 'CHF ' + yearlyRateEquivalent)
-            .replace(/{monthly_rate}/g, 'CHF ' + monthlyRate)
-            .replace(/{yearly_rate}/g, 'CHF ' + yearlyRate)
+            .replace(/{savings_vs_monthly}/g, '${currency} ' + savingsVsMonthly)
+            .replace(/{yearly_rate_equivalent}/g, '${currency} ' + yearlyRateEquivalent)
+            .replace(/{monthly_rate}/g, '${currency} ' + monthlyRate)
+            .replace(/{yearly_rate}/g, '${currency} ' + yearlyRate)
             // Keep old placeholders for backward compatibility
-            .replace(/{savings}/g, 'CHF ' + savingsVsMonthly)
-            .replace(/{equivalent}/g, 'CHF ' + yearlyRateEquivalent);
+            .replace(/{savings}/g, '${currency} ' + savingsVsMonthly)
+            .replace(/{equivalent}/g, '${currency} ' + yearlyRateEquivalent);
           el.textContent = text;
         } else if (el.dataset.monthlyText && el.dataset.yearlyText) {
           // Use pre-calculated text if no template
