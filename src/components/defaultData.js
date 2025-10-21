@@ -1,123 +1,3 @@
-export const defaultPlans = [
-  {
-    id: 1,
-    name: 'Your First Month 🚀',
-    monthlyPrice: 55,
-    yearlyPrice: 0,
-    description: 'Best option to get started',
-    features: [
-      { text: 'Unlimited class attendance', included: true },
-      { text: 'Access to all training sessions', included: true },
-      { text: 'Access to the gym facilities', included: true },
-      { text: 'Free HMD T-shirt', included: true }
-    ],
-    buttonText: 'Join Now',
-    buttonLink: '',
-    embedCode: '',
-    useEmbed: false,
-    monthly: {
-      buttonText: 'Join Now',
-      buttonLink: '',
-      embedCode: '',
-      useEmbed: false,
-      openInNewTab: true,
-      promotionalText: '',
-      showEquivalentPrice: true,
-      equivalentTemplate: '🎁 Get it for FREE with a yearly plan!'
-    },
-    yearly: {
-      buttonText: 'Join Now',
-      buttonLink: '',
-      embedCode: '',
-      useEmbed: false,
-      openInNewTab: true,
-      promotionalText: '🎁 Get it for FREE, choose a yearly plan!',
-      showEquivalentPrice: true,
-      equivalentTemplate: 'FREE with a yearly plan!'
-    },
-    isFeatured: true
-  },
-  {
-    id: 2,
-    name: 'Students 👍',
-    monthlyPrice: 70,
-    yearlyPrice: 660,
-    description: 'Special rate for students',
-    features: [
-      { text: 'Unlimited class attendance', included: true },
-      { text: 'Access to all training sessions', included: true },
-      { text: 'Access to the gym facilities', included: true },
-      { text: 'Free HMD T-shirt', included: true },
-      { text: 'Discount on sparring equipment', included: true },
-      { text: 'Valid student ID required', included: true }
-    ],
-    buttonText: 'Join Now',
-    buttonLink: '',
-    embedCode: '',
-    useEmbed: false,
-    monthly: {
-      buttonText: 'Join Now',
-      buttonLink: 'https://hmdbasel.payrexx.com/pay?tid=4714fa14',
-      embedCode: '',
-      useEmbed: false,
-      openInNewTab: true,
-      promotionalText: '',
-      showEquivalentPrice: true,
-      equivalentTemplate: 'Only {equivalent} with annual billing'
-    },
-    yearly: {
-      buttonText: 'Join Now',
-      buttonLink: 'https://hmdbasel.payrexx.com/pay?tid=eabfd528',
-      embedCode: '',
-      useEmbed: false,
-      openInNewTab: true,
-      promotionalText: '',
-      showEquivalentPrice: true,
-      equivalentTemplate: 'Save {savings_vs_monthly} vs monthly'
-    },
-    isFeatured: false
-  },
-  {
-    id: 3,
-    name: 'Standard 👊',
-    monthlyPrice: 85,
-    yearlyPrice: 840,
-    description: 'Complete training for body and mind',
-    features: [
-      { text: 'Unlimited class attendance', included: true },
-      { text: 'Access to all training sessions', included: true },
-      { text: 'Access to the gym facilities', included: true },
-      { text: 'Free HMD T-shirt', included: true },
-      { text: 'Discount on sparring equipment', included: true }
-    ],
-    buttonText: 'Join Now',
-    buttonLink: '',
-    embedCode: '',
-    useEmbed: false,
-    monthly: {
-      buttonText: 'Join Now',
-      buttonLink: 'https://hmdbasel.payrexx.com/pay?tid=55342067',
-      embedCode: '',
-      useEmbed: false,
-      openInNewTab: true,
-      promotionalText: '',
-      showEquivalentPrice: true,
-      equivalentTemplate: 'Only {equivalent} with annual billing'
-    },
-    yearly: {
-      buttonText: 'Join Now',
-      buttonLink: 'https://hmdbasel.payrexx.com/pay?tid=35983290',
-      embedCode: '',
-      useEmbed: false,
-      openInNewTab: true,
-      promotionalText: '',
-      showEquivalentPrice: true,
-      equivalentTemplate: 'Save {savings_vs_monthly} vs monthly'
-    },
-    isFeatured: false
-  }
-];
-
 export const defaultData = {
   header: {
     enabled: true,
@@ -216,10 +96,13 @@ export const defaultData = {
   defaultBilling: 'monthly'
 };
 
+// Export individual parts for backward compatibility
+export const defaultPlans = defaultData.plans;
+export const defaultStyles = defaultData.styles;
 export const defaultHeader = {
-  show: false,
-  title: 'Begin your Martial Arts journey today!',
-  subtitle: 'Join our Hwalmoodo Kickboxing community in Basel',
-  featuredBadgeText: 'Get Started',
-  defaultBillingPeriod: 'monthly'
+  enabled: defaultData.header.enabled,
+  title: defaultData.header.title,
+  subtitle: defaultData.header.subtitle,
+  featuredBadge: defaultData.header.featuredBadge,
+  defaultBillingPeriod: defaultData.defaultBilling
 };
