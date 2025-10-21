@@ -77,7 +77,7 @@ export default function PricingPreview({ plans, styles, header, billingPeriod, s
         padding: '2rem',
         minHeight: 'calc(100vh - 8rem)'
       }}>
-        {header.show && (
+        {header.enabled && (
           <div className="text-center mb-12">
             {header.title && (
               <h2 className="text-4xl font-bold mb-4" style={{ color: styles.textColor }}>

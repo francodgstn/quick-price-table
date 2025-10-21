@@ -5,7 +5,7 @@ export const generateHTML = (plans, styles, header) => {
     ? '<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">'
     : '';
   
-  const headerHTML = header.show ? `
+  const headerHTML = header.enabled ? `
     <div class="header">
       ${header.title ? `<h1>${header.title}</h1>` : ''}
       ${header.subtitle ? `<p>${header.subtitle}</p>` : ''}

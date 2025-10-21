@@ -7,15 +7,15 @@ export default function HeaderEditor({ header, setHeader, styles }) {
         <input
           type="checkbox"
           id="showHeader"
-          checked={header.show}
-          onChange={(e) => setHeader({...header, show: e.target.checked})}
+          checked={header.enabled}
+          onChange={(e) => setHeader({...header, enabled: e.target.checked})}
           className="w-4 h-4"
         />
         <label htmlFor="showHeader" className="text-sm text-gray-700">
             Show Header
           </label>
         </div>
-        {header.show && (
+        {header.enabled && (
           <>
             <div>
               <label className="block text-sm mb-1 text-gray-700">Title</label>
