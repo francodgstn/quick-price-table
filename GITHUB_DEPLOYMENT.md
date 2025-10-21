@@ -41,20 +41,23 @@ git remote add origin https://github.com/YOUR-USERNAME/quick-price-table.git
 git push -u origin master
 ```
 
-### 3. Enable GitHub Pages
+### 3. Configure GitHub Pages (Source)
 
 1. Go to your repository on GitHub
 2. Click **Settings** tab
 3. In the left sidebar, click **Pages**
-4. Under **Source**, select:
-   - **Source:** GitHub Actions (recommended)
-5. Click **Save**
+4. Under **Build and deployment** → **Source**, select:
+   - **Source:** ✅ **GitHub Actions** (modern method, already configured!)
+   - ~~Deploy from a branch~~ (legacy method, don't use this)
 
-**That's it!** The GitHub Actions workflow (`.github/workflows/deploy.yml`) will automatically:
-- Run on every push to `main` (or `master`)
-- Install dependencies
-- Build the React app
-- Deploy to GitHub Pages
+**That's it!** No additional configuration needed. The workflow file (`.github/workflows/deploy.yml`) is already set up and will automatically:
+- ✅ Run on every push to `main` (or `master`)
+- ✅ Install dependencies with npm
+- ✅ Build the React app
+- ✅ Upload build artifacts
+- ✅ Deploy to GitHub Pages using official Actions
+
+**Note:** GitHub will automatically detect the workflow file and enable Actions-based deployment. You just need to confirm "GitHub Actions" is selected as the source in Settings → Pages.
 
 ### 4. Update README with Your Live URL
 
@@ -79,9 +82,14 @@ git push -u origin master
 ## Automatic Deployments
 
 Every time you push changes to the `main` (or `master`) branch, GitHub Actions will:
-1. Build your app
-2. Deploy to GitHub Pages
-3. Update your live site automatically
+1. ✅ Automatically trigger the workflow
+2. ✅ Run `npm ci` to install dependencies
+3. ✅ Run `npm run build` to create production build
+4. ✅ Upload the `build/` folder as an artifact
+5. ✅ Deploy the artifact to GitHub Pages
+6. ✅ Update your live site automatically (usually 2-3 minutes)
+
+**This uses the modern GitHub Actions approach** - not the legacy "deploy from branch" method.
 
 No manual deployment needed! 🎉
 
@@ -99,8 +107,14 @@ No manual deployment needed! 🎉
 
 ### Wrong Branch
 If the workflow is set for `main` but you're on `master`:
-- Either rename your branch: `git branch -M main`
-- Or update `.github/workflows/deploy.yml` line 5 to use `master`
+- Either rename your branch: `git branch -M main && git push -u origin main`
+- Or update `.github/workflows/deploy.yml` line 5 to change `main` to `master`
+
+### Pages Source Not Set to Actions
+If you see "Build and deployment" shows "Deploy from a branch":
+- Go to Settings → Pages
+- Change **Source** to **GitHub Actions**
+- This is required for the workflow to deploy properly
 
 ## Local Development
 
