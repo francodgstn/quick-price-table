@@ -211,7 +211,7 @@ export const generateHTML = (plans, styles, header) => {
     .billing-toggle {
       display: flex;
       justify-content: center;
-      margin-bottom: 2rem;
+      margin-bottom: 3rem;
     }
     .toggle-container {
       display: inline-flex;
