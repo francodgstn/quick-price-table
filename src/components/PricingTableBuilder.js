@@ -61,6 +61,20 @@ export default function PricingTableBuilder() {
     return collapsed;
   });
 
+  // Reset to default configuration
+  const resetToDefaults = () => {
+    setPlans(defaultPlans);
+    setStyles(defaultStyles);
+    setHeader(defaultHeader);
+    setBillingPeriod(defaultHeader.defaultBillingPeriod || 'monthly');
+    // Reset collapsed plans state
+    const collapsed = {};
+    defaultPlans.forEach(plan => {
+      collapsed[plan.id] = true;
+    });
+    setCollapsedPlans(collapsed);
+  };
+
   const updatePlan = (id, field, value) => {
     setPlans(plans.map(p => p.id === id ? { ...p, [field]: value } : p));
   };
@@ -208,6 +222,7 @@ export default function PricingTableBuilder() {
                 styles={styles}
                 header={header}
                 onLoadConfig={loadConfig}
+                onResetToDefaults={resetToDefaults}
                 buttonStyle={{
                   backgroundColor: '#8b5cf6',
                   color: 'white'

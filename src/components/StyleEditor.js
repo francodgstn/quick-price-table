@@ -33,24 +33,28 @@ export default function StyleEditor({ styles, setStyles }) {
             style={{ borderColor: '#d1d5db' }}
           />
         </div>
-        <div>
-          <label className="block text-sm mb-1 text-gray-700">Border Radius</label>
-          <input
-            type="range"
-            min="0"
-            max="24"
-            value={styles.borderRadius}
-            onChange={(e) => setStyles({...styles, borderRadius: e.target.value})}
-            className="w-full"
-          />
-          <span className="text-xs text-gray-700">{styles.borderRadius}px</span>
+        
+        <div className="flex items-center justify-between gap-3">
+          <label className="text-sm text-gray-700 whitespace-nowrap">Border Radius</label>
+          <div className="flex items-center gap-2 flex-1">
+            <input
+              type="range"
+              min="0"
+              max="24"
+              value={styles.borderRadius}
+              onChange={(e) => setStyles({...styles, borderRadius: e.target.value})}
+              className="flex-1"
+            />
+            <span className="text-xs text-gray-700 w-8 text-right">{styles.borderRadius}px</span>
+          </div>
         </div>
-        <div>
-          <label className="block text-sm mb-1 text-gray-700">Font Family</label>
+        
+        <div className="flex items-center justify-between gap-3">
+          <label className="text-sm text-gray-700 whitespace-nowrap">Font Family</label>
           <select
             value={styles.fontFamily}
             onChange={(e) => setStyles({...styles, fontFamily: e.target.value})}
-            className="w-full px-3 py-2 border rounded"
+            className="flex-1 px-3 py-2 border rounded text-sm"
             style={{ borderColor: '#d1d5db' }}
           >
             <option value="system-ui">System UI</option>

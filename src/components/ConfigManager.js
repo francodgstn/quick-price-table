@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Save, Download, Upload, Trash2, FolderOpen, X } from 'lucide-react';
+import { Save, Download, Upload, Trash2, FolderOpen, X, RotateCcw } from 'lucide-react';
 
 export default function ConfigManager({ 
   plans, 
   styles, 
   header, 
   onLoadConfig,
+  onResetToDefaults,
   buttonStyle 
 }) {
   const [showMenu, setShowMenu] = useState(false);
@@ -155,7 +156,7 @@ export default function ConfigManager({
                   <Download size={16} />
                   Export JSON
                 </button>
-                <label className="px-3 py-2 rounded flex items-center justify-center gap-2 text-sm font-medium transition-colors bg-purple-500 text-white hover:bg-purple-600 cursor-pointer col-span-2">
+                <label className="px-3 py-2 rounded flex items-center justify-center gap-2 text-sm font-medium transition-colors bg-purple-500 text-white hover:bg-purple-600 cursor-pointer">
                   <Upload size={16} />
                   Import JSON
                   <input
@@ -165,6 +166,18 @@ export default function ConfigManager({
                     className="hidden"
                   />
                 </label>
+                <button
+                  onClick={() => {
+                    if (window.confirm('Reset to default configuration? All unsaved changes will be lost.')) {
+                      onResetToDefaults();
+                      setShowMenu(false);
+                    }
+                  }}
+                  className="px-3 py-2 rounded flex items-center justify-center gap-2 text-sm font-medium transition-colors bg-orange-500 text-white hover:bg-orange-600"
+                >
+                  <RotateCcw size={16} />
+                  Reset Defaults
+                </button>
               </div>
 
               {/* Saved Configurations List */}
