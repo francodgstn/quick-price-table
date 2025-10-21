@@ -306,6 +306,13 @@ export default function PricingTableBuilder() {
           setBillingPeriod={setBillingPeriod}
         />
       </div>
+
+      {/* AI-Generated Disclaimer Footer */}
+      <div className="fixed bottom-4 right-4 bg-white/90 backdrop-blur-sm px-3 py-2 rounded-lg shadow-md border border-gray-200 text-xs text-gray-600">
+        <span className="flex items-center gap-2">
+          ✨ Built with AI assistance
+        </span>
+      </div>
     </div>
   );
 }

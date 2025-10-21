@@ -1,48 +1,135 @@
 # Quick Price Table Builder
 
+> **Note:** This project was primarily created using AI-assisted coding (GitHub Copilot & AI vibe coding). It showcases how AI tools can help rapidly prototype and build full-featured web applications.
+
 A React-based pricing table builder for creating beautiful, responsive pricing tables with customizable styles and features.
+
+🔗 **Live Demo:** [https://YOUR-USERNAME.github.io/quick-price-table](https://YOUR-USERNAME.github.io/quick-price-table)
 
 ## Features
 
-- 🎨 Customizable colors, fonts, and styling
-- 📱 Fully responsive design
-- ✨ Drag and drop plan ordering
-- 🎯 Featured plan highlighting
-- 💰 Monthly/Yearly billing toggle
-- 📝 Custom features with checkmarks
-- 🔗 Button links or embed codes for CTAs
-- 📤 Export to standalone HTML file
-- 🎭 Collapsible plan editors
+- 🎨 **Customizable Styling** - Colors, fonts, border radius, and layout modes
+- 📱 **Fully Responsive** - Grid layout with tablet/mobile optimization
+- 🔄 **Layout Modes** - Responsive grid or horizontal scroll with snap
+- 💾 **Configuration Management** - Save, load, export, and import configurations
+- 💰 **Dual Billing** - Monthly/Yearly pricing with automatic calculations
+- 🎯 **Featured Plans** - Highlight popular plans with badges
+- � **Smart Placeholders** - Dynamic price calculations with templates
+- ✨ **Drag & Drop** - Reorder plans easily
+- 🎭 **Compact Mode** - Collapsible features for embedding
+- 📤 **HTML Export** - Standalone, self-contained HTML files
+- � **FREE Display** - Show "FREE" instead of "$0" for zero prices
+- 🎨 **Live Preview** - Real-time updates as you edit
 
-## Installation
+## Quick Start
 
-1. Navigate to the project folder:
-   ```bash
-   cd C:\git\quick-price-table
-   ```
+### Installation
 
-2. Install dependencies:
-   ```bash
-   npm install
-   ```
-
-## Running the Project
-
-Start the development server:
 ```bash
+# Clone the repository
+git clone https://github.com/YOUR-USERNAME/quick-price-table.git
+cd quick-price-table
+
+# Install dependencies
+npm install
+# or
+pnpm install
+# or
+yarn install
+
+# Start development server
 npm start
 ```
 
-The app will open in your browser at `http://localhost:3000`
+The app will open at `http://localhost:3000`
 
-## Building for Production
+### Building for Production
 
-Create an optimized production build:
 ```bash
 npm run build
 ```
 
-The build files will be in the `build` folder.
+The optimized build will be in the `build` folder.
+
+## Usage Guide
+
+### 1. **Configuration Panel** (Left Sidebar)
+
+#### Styling Section
+- **Colors**: Primary, Accent, Background, and Text colors
+- **Border Radius**: Adjust card roundness (0-24px)
+- **Font Family**: Choose from System UI, Montserrat, Georgia, etc.
+- **Layout Mode**: 
+  - *Responsive*: Stacks on mobile, grid on desktop
+  - *Horizontal Scroll*: Side-by-side cards with swipe
+- **Compact Mode**: Collapse features by default (ideal for Google Sites)
+- **FREE Display**: Show "FREE" instead of "$0" for zero prices
+
+#### Header Section
+- Toggle header visibility
+- Customize title and subtitle
+- Set featured badge text
+- Choose default billing period (Monthly/Yearly)
+
+#### Plans Section
+- Add up to 4 pricing plans
+- Drag to reorder plans
+- Set monthly and yearly prices
+- Add/remove features with inclusion toggles
+- Configure separate actions for monthly/yearly billing
+- Add promotional text per billing period
+- Use price calculation templates with placeholders
+
+### 2. **Configuration Management** (Top Bar)
+
+Click the **"Configs"** button to:
+- **Save Current**: Store current configuration in browser
+- **Export JSON**: Download configuration as file
+- **Import JSON**: Load configuration from file
+- **Load Saved**: Click any saved config to restore it
+- **Delete**: Remove unwanted configurations
+
+### 3. **Price Templates**
+
+Use these placeholders in "Equivalent Template" fields:
+- `{savings_vs_monthly}` - Total savings vs monthly billing
+- `{yearly_rate_equivalent}` - Monthly equivalent of yearly price
+- `{monthly_rate}` - The monthly price
+- `{yearly_rate}` - The yearly price
+
+**Example:** `"Save {savings_vs_monthly} with yearly plan"` → "Save $120 with yearly plan"
+
+### 4. **Exporting**
+
+Click **"Export HTML"** to:
+- **Copy to Clipboard**: Get HTML code for embedding
+- **Download HTML**: Get standalone HTML file
+
+The exported HTML is:
+- ✅ Self-contained (no external dependencies)
+- ✅ Includes all styles and fonts
+- ✅ Fully responsive
+- ✅ Works offline
+
+## Embedding in Google Sites
+
+1. Enable **Compact Mode** in Styling section (reduces height)
+2. Choose **Horizontal Scroll** layout mode (better for mobile)
+3. Click **"Export HTML"** → **"Copy to Clipboard"**
+4. In Google Sites:
+   - Add an **"Embed"** component
+   - Select **"Embed Code"**
+   - Paste the HTML
+   - Adjust iframe height if needed
+5. Save and publish
+
+## Technologies Used
+
+- **React 18** - UI framework
+- **Create React App** - Build tooling
+- **Tailwind CSS** - Utility-first CSS
+- **Lucide React** - Icon library
+- **LocalStorage API** - Configuration persistence
 
 ## Project Structure
 
@@ -52,7 +139,8 @@ quick-price-table/
 │   └── index.html
 ├── src/
 │   ├── components/
-│   │   ├── PricingTableBuilder.js  # Main component
+│   │   ├── ConfigManager.js        # Configuration management
+│   │   ├── PricingTableBuilder.js  # Main app component
 │   │   ├── StyleEditor.js          # Style customization
 │   │   ├── HeaderEditor.js         # Header settings
 │   │   ├── PlansEditor.js          # Plans list manager
@@ -64,34 +152,38 @@ quick-price-table/
 │   ├── App.js
 │   ├── index.js
 │   └── index.css
-├── package.json
-└── README.md
+└── package.json
 ```
 
-## Usage
+## Development
 
-1. **Customize Styles**: Adjust colors, fonts, and border radius in the Styling section
-2. **Edit Header**: Toggle header visibility and customize title/subtitle
-3. **Manage Plans**: Add, remove, reorder (drag & drop), and collapse plans
-4. **Configure Features**: Add/remove features, toggle inclusion, and set pricing
-5. **Set Actions**: Choose between button links or embed codes for CTAs
-6. **Export**: Click "Export HTML" to download or copy the standalone HTML file
+This project uses:
+- **React 18.2.0**
+- **Node.js** (v14 or higher recommended)
+- **pnpm** (preferred) or npm/yarn
 
-## Exporting to Google Sites
+### Available Scripts
 
-1. Click the "Export HTML" button
-2. Click "Copy to Clipboard"
-3. In Google Sites, add an "Embed" component
-4. Select "Embed Code"
-5. Paste the HTML code
-6. Save and publish
+```bash
+npm start          # Start dev server
+npm run build      # Production build
+npm test           # Run tests
+npm run eject      # Eject from CRA (one-way operation)
+```
 
-## Technologies Used
+## Contributing
 
-- React 18
-- Lucide React (icons)
-- Create React App
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## AI-Assisted Development Disclaimer
+
+This project was primarily created using AI-assisted coding techniques, including GitHub Copilot and conversational AI programming. It serves as an example of how AI tools can accelerate software development while maintaining code quality and functionality.
 
 ## License
 
-MIT
+MIT License - feel free to use this project for personal or commercial purposes.
+
+## Author
+
+Created with AI assistance as a demonstration of modern AI-assisted development workflows.
+
