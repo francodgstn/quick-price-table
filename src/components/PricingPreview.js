@@ -92,7 +92,7 @@ export default function PricingPreview({ plans, styles, header, billingPeriod, s
           </div>
         )}
 
-        <div className="flex justify-center mb-8">
+        <div className="flex justify-center mb-12">
           <div className="inline-flex rounded-lg p-1" style={{ backgroundColor: 'white', border: '1px solid #e5e7eb' }}>
             <button
               onClick={() => setBillingPeriod('monthly')}
