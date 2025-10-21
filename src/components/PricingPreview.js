@@ -65,10 +65,15 @@ export default function PricingPreview({ plans, styles, header, billingPeriod, s
 
   return (
     <div className="flex-1 p-8 overflow-y-auto" style={{ 
-      backgroundColor: styles.backgroundColor,
-      fontFamily: styles.fontFamily
+      backgroundColor: '#f3f4f6'
     }}>
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-6xl mx-auto" style={{ 
+        backgroundColor: styles.backgroundColor,
+        fontFamily: styles.fontFamily,
+        borderRadius: '12px',
+        padding: '2rem',
+        minHeight: 'calc(100vh - 8rem)'
+      }}>
         {header.show && (
           <div className="text-center mb-12">
             {header.title && (
