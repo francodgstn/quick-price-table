@@ -181,13 +181,16 @@ const billingLabel = styles.billingTerminology === 'annual' ? 'Annual' : 'Yearly
             if (config?.useEmbed && config.embedCode) {
               return <div set:html={config.embedCode} />;
             }
+            const buttonLink = config?.buttonLink;
+            const hasValidLink = buttonLink && buttonLink !== '#';
             return (
               <Button
-                href={config?.buttonLink || '#'}
+                href={hasValidLink ? buttonLink : undefined}
+                as={hasValidLink ? undefined : 'button'}
                 variant={plan.isFeatured ? 'blue' : 'primary'}
                 size="default"
                 shadow={true}
-                target={config?.openInNewTab !== false ? '_blank' : undefined}
+                target={hasValidLink && config?.openInNewTab !== false ? '_blank' : undefined}
                 class="cta-monthly"
               >
                 {config?.buttonText || 'Get Started'}
@@ -204,13 +207,16 @@ const billingLabel = styles.billingTerminology === 'annual' ? 'Annual' : 'Yearly
             if (config?.useEmbed && config.embedCode) {
               return <div class="cta-yearly" set:html={config.embedCode} />;
             }
+            const buttonLink = config?.buttonLink;
+            const hasValidLink = buttonLink && buttonLink !== '#';
             return (
               <Button
-                href={config?.buttonLink || '#'}
+                href={hasValidLink ? buttonLink : undefined}
+                as={hasValidLink ? undefined : 'button'}
                 variant={plan.isFeatured ? 'blue' : 'primary'}
                 size="default"
                 shadow={true}
-                target={config?.openInNewTab !== false ? '_blank' : undefined}
+                target={hasValidLink && config?.openInNewTab !== false ? '_blank' : undefined}
                 class="cta-yearly hidden"
               >
                 {config?.buttonText || 'Get Started'}
