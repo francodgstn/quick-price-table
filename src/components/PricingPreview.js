@@ -119,9 +119,9 @@ export default function PricingPreview({ plans, styles, header, billingPeriod, s
           {/* Yearly Incentive Annotation */}
           {header.showYearlyIncentive !== false && (
             <div className="absolute" style={{
-              top: '-45px',
-              right: 'calc(50% - 140px)',
-              transform: 'rotate(-8deg)',
+              top: '-50px',
+              right: 'calc(50% - 150px)',
+              transform: 'rotate(-5deg)',
               pointerEvents: 'none'
             }}>
               <div style={{
@@ -134,38 +134,6 @@ export default function PricingPreview({ plans, styles, header, billingPeriod, s
               }}>
                 {header.yearlyIncentiveText || 'Save more!'}
               </div>
-              <svg
-                width="50"
-                height="50"
-                viewBox="0 0 50 50"
-                style={{
-                  position: 'absolute',
-                  top: '20px',
-                  right: '-35px',
-                  transform: 'rotate(15deg)'
-                }}
-              >
-                <defs>
-                  <marker
-                    id="arrowhead"
-                    markerWidth="10"
-                    markerHeight="10"
-                    refX="9"
-                    refY="3"
-                    orient="auto"
-                  >
-                    <polygon points="0 0, 10 3, 0 6" fill="#f59e0b" />
-                  </marker>
-                </defs>
-                <path
-                  d="M 5 5 Q 20 15, 35 25"
-                  stroke="#f59e0b"
-                  strokeWidth="2.5"
-                  fill="none"
-                  markerEnd="url(#arrowhead)"
-                  strokeLinecap="round"
-                />
-              </svg>
             </div>
           )}
         </div>

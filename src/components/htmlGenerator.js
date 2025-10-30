@@ -241,9 +241,9 @@ export const generateHTML = (plans, styles, header) => {
     }
     .yearly-incentive {
       position: absolute;
-      top: -45px;
-      right: calc(50% - 140px);
-      transform: rotate(-8deg);
+      top: -50px;
+      right: calc(50% - 150px);
+      transform: rotate(-5deg);
       pointer-events: none;
     }
     .incentive-text {
@@ -253,12 +253,6 @@ export const generateHTML = (plans, styles, header) => {
       color: #f59e0b;
       text-shadow: 0 1px 2px rgba(0,0,0,0.1);
       white-space: nowrap;
-    }
-    .incentive-arrow {
-      position: absolute;
-      top: 20px;
-      right: -35px;
-      transform: rotate(15deg);
     }
     .pricing-grid-wrapper {
       position: relative;
@@ -477,14 +471,6 @@ export const generateHTML = (plans, styles, header) => {
       ${header.showYearlyIncentive !== false ? `
       <div class="yearly-incentive">
         <div class="incentive-text">${header.yearlyIncentiveText || 'Save more!'}</div>
-        <svg class="incentive-arrow" width="50" height="50" viewBox="0 0 50 50">
-          <defs>
-            <marker id="arrowhead" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
-              <polygon points="0 0, 10 3, 0 6" fill="#f59e0b" />
-            </marker>
-          </defs>
-          <path d="M 5 5 Q 20 15, 35 25" stroke="#f59e0b" stroke-width="2.5" fill="none" marker-end="url(#arrowhead)" stroke-linecap="round" />
-        </svg>
       </div>
       ` : ''}
     </div>
