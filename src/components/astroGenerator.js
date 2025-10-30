@@ -438,7 +438,7 @@ const defaultBillingPeriod = header.defaultBillingPeriod || 'monthly';
 <script>
   // Client-side interactivity
   const initPricingTable = () => {
-    let currentBilling = '${defaultBillingPeriod}';
+    let currentBilling = '${defaultPeriod}';
     const currency = '${currency}';
 
     // Initialize billing toggle
