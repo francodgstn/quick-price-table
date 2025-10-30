@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Settings, Eye, Download, ChevronDown, ChevronUp } from 'lucide-react';
 import { defaultPlans, defaultStyles, defaultHeader } from './defaultData';
 import { generateHTML } from './htmlGenerator';
+import { generateAstroComponent } from './astroGenerator';
 import StyleEditor from './StyleEditor';
 import HeaderEditor from './HeaderEditor';
 import PlansEditor from './PlansEditor';
@@ -182,10 +183,10 @@ export default function PricingTableBuilder() {
     }
   };
 
-  const copyToClipboard = async () => {
-    const html = generateHTML(plans, styles, header);
+  const copyToClipboard = async (content) => {
+    const textToCopy = content || generateHTML(plans, styles, header);
     try {
-      await navigator.clipboard.writeText(html);
+      await navigator.clipboard.writeText(textToCopy);
       setCopySuccess(true);
       setTimeout(() => setCopySuccess(false), 2000);
     } catch (err) {
@@ -206,11 +207,26 @@ export default function PricingTableBuilder() {
     URL.revokeObjectURL(url);
   };
 
+  const downloadAstro = () => {
+    const astro = generateAstroComponent(plans, styles, header);
+    const blob = new Blob([astro], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'PricingTable.astro';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#f3f4f6' }}>
       {styles.fontFamily.includes('Montserrat') && (
         <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
       )}
+      {/* Caveat font for handwritten annotation */}
+      <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&display=swap" rel="stylesheet" />
       
       <div className="border-b bg-white" style={{ borderColor: '#e5e7eb' }}>
         <div className="max-w-7xl mx-auto px-4 py-4">
@@ -260,9 +276,11 @@ export default function PricingTableBuilder() {
         setShowExportModal={setShowExportModal}
         styles={styles}
         htmlContent={generateHTML(plans, styles, header)}
+        astroContent={generateAstroComponent(plans, styles, header)}
         copySuccess={copySuccess}
         onCopy={copyToClipboard}
         onDownload={downloadHTML}
+        onDownloadAstro={downloadAstro}
       />
 
       <div className="flex">

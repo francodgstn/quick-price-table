@@ -81,6 +81,39 @@ export default function HeaderEditor({ header, setHeader, styles }) {
             Which billing period to show by default when the page loads
           </p>
         </div>
+
+        <div>
+          <div className="flex items-center gap-2 mb-2">
+            <input
+              type="checkbox"
+              id="showYearlyIncentive"
+              checked={header.showYearlyIncentive !== false}
+              onChange={(e) => setHeader({...header, showYearlyIncentive: e.target.checked})}
+              className="w-4 h-4"
+              style={{ accentColor: '#3b82f6' }}
+            />
+            <label htmlFor="showYearlyIncentive" className="text-sm text-gray-700">
+              Show Yearly Incentive Annotation
+            </label>
+          </div>
+          {header.showYearlyIncentive !== false && (
+            <div>
+              <label className="block text-sm mb-1 text-gray-700">Incentive Text</label>
+              <input
+                type="text"
+                value={header.yearlyIncentiveText || 'Save more!'}
+                onChange={(e) => setHeader({...header, yearlyIncentiveText: e.target.value})}
+                className="w-full border rounded px-3 py-2 text-sm"
+                style={{ borderColor: '#d1d5db' }}
+                placeholder="Save more!"
+                maxLength={30}
+              />
+              <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>
+                Handwritten-style text with arrow pointing to yearly tab
+              </p>
+            </div>
+          )}
+        </div>
     </div>
   );
 }

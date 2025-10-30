@@ -3,7 +3,9 @@ export const defaultData = {
     enabled: true,
     title: 'Choose Your Plan',
     subtitle: 'Select the perfect plan for your needs',
-    featuredBadge: 'Most Popular'
+    featuredBadge: 'Most Popular',
+    showYearlyIncentive: true,
+    yearlyIncentiveText: 'Save more!'
   },
   styles: {
     primaryColor: '#3B82F6',
@@ -105,5 +107,7 @@ export const defaultHeader = {
   title: defaultData.header.title,
   subtitle: defaultData.header.subtitle,
   featuredBadge: defaultData.header.featuredBadge,
-  defaultBillingPeriod: defaultData.defaultBilling
+  defaultBillingPeriod: defaultData.defaultBilling,
+  showYearlyIncentive: defaultData.header.showYearlyIncentive,
+  yearlyIncentiveText: defaultData.header.yearlyIncentiveText
 };

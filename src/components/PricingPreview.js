@@ -92,7 +92,7 @@ export default function PricingPreview({ plans, styles, header, billingPeriod, s
           </div>
         )}
 
-        <div className="flex justify-center mb-12">
+        <div className="flex justify-center mb-12 relative">
           <div className="inline-flex rounded-lg p-1" style={{ backgroundColor: 'white', border: '1px solid #e5e7eb' }}>
             <button
               onClick={() => setBillingPeriod('monthly')}
@@ -115,6 +115,59 @@ export default function PricingPreview({ plans, styles, header, billingPeriod, s
               Yearly
             </button>
           </div>
+          
+          {/* Yearly Incentive Annotation */}
+          {header.showYearlyIncentive !== false && (
+            <div className="absolute" style={{
+              top: '-45px',
+              right: 'calc(50% - 140px)',
+              transform: 'rotate(-8deg)',
+              pointerEvents: 'none'
+            }}>
+              <div style={{
+                fontFamily: "'Caveat', cursive",
+                fontSize: '1.5rem',
+                fontWeight: '600',
+                color: '#f59e0b',
+                textShadow: '0 1px 2px rgba(0,0,0,0.1)',
+                whiteSpace: 'nowrap'
+              }}>
+                {header.yearlyIncentiveText || 'Save more!'}
+              </div>
+              <svg
+                width="50"
+                height="50"
+                viewBox="0 0 50 50"
+                style={{
+                  position: 'absolute',
+                  top: '20px',
+                  right: '-35px',
+                  transform: 'rotate(15deg)'
+                }}
+              >
+                <defs>
+                  <marker
+                    id="arrowhead"
+                    markerWidth="10"
+                    markerHeight="10"
+                    refX="9"
+                    refY="3"
+                    orient="auto"
+                  >
+                    <polygon points="0 0, 10 3, 0 6" fill="#f59e0b" />
+                  </marker>
+                </defs>
+                <path
+                  d="M 5 5 Q 20 15, 35 25"
+                  stroke="#f59e0b"
+                  strokeWidth="2.5"
+                  fill="none"
+                  markerEnd="url(#arrowhead)"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </div>
+          )}
         </div>
 
         <div className={styles.layoutMode === 'horizontal-scroll' 
