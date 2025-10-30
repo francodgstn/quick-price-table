@@ -230,6 +230,17 @@ export default function PricingPreview({ plans, styles, header, billingPeriod, s
                 </p>
               </div>
 
+              {!styles.compactMode && (
+                <div className="flex justify-center my-6">
+                  <div style={{
+                    width: '60px',
+                    height: '3px',
+                    backgroundColor: styles.accentColor,
+                    borderRadius: '2px'
+                  }} />
+                </div>
+              )}
+
               {styles.compactMode && (
                 <button
                   onClick={() => toggleCard(plan.id)}

@@ -143,6 +143,10 @@ const billingLabel = styles.billingTerminology === 'annual' ? 'Annual' : 'Yearly
           </button>
         )}
 
+        {!styles.compactMode && (
+          <div class="divider"></div>
+        )}
+
         <ul class={\`features-list \${styles.compactMode ? 'hidden' : ''}\`}>
           {plan.features.map((feature) => (
             <li class={\`feature-item \${feature.included ? 'included' : 'excluded'}\`}>
@@ -355,6 +359,14 @@ const billingLabel = styles.billingTerminology === 'annual' ? 'Annual' : 'Yearly
     border: none;
     cursor: pointer;
     transition: all 0.2s;
+  }
+
+  .divider {
+    width: 60px;
+    height: 3px;
+    background-color: var(--accentColor);
+    border-radius: 2px;
+    margin: 1.5rem auto;
   }
 
   .features-list {

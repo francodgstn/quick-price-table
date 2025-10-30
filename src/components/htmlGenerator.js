@@ -147,6 +147,10 @@ export const generateHTML = (plans, styles, header) => {
           ${priceNoteHTML}
         </div>
         
+        ${!styles.compactMode ? `
+        <div class="divider"></div>
+        ` : ''}
+        
         ${styles.compactMode ? `
         <button class="toggle-features" onclick="toggleFeatures(${plan.id})">
           <span class="toggle-text">Show Features</span>
@@ -375,6 +379,13 @@ export const generateHTML = (plans, styles, header) => {
     .price-note {
       font-size: 0.75rem;
       color: #9ca3af;
+    }
+    .divider {
+      width: 60px;
+      height: 3px;
+      background-color: ${styles.accentColor};
+      border-radius: 2px;
+      margin: 1.5rem auto;
     }
     .features {
       list-style: none;
