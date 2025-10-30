@@ -74,6 +74,8 @@ interface Props {
 } = Astro.props;`;
 
   const astroComponent = `---
+import Button from '@/components/ui/Button.astro'; // Adjust the path to match your project structure
+
 ${interfaceCode}
 
 ${propsCode}
@@ -169,8 +171,52 @@ const billingLabel = styles.billingTerminology === 'annual' ? 'Annual' : 'Yearly
           ))}
         </ul>
 
-        <div class="cta-container" data-monthly-cta data-yearly-cta>
-          <!-- CTA buttons will be populated by client-side script -->
+        <div class="cta-container">
+          {/* Monthly CTA */}
+          {(() => {
+            const config = plan.monthly;
+            if (config?.promotionalText && config.promotionalText.trim()) {
+              return <div class="promotional">{config.promotionalText}</div>;
+            }
+            if (config?.useEmbed && config.embedCode) {
+              return <div set:html={config.embedCode} />;
+            }
+            return (
+              <Button
+                href={config?.buttonLink || '#'}
+                variant={plan.isFeatured ? 'blue' : 'primary'}
+                size="default"
+                shadow={true}
+                target={config?.openInNewTab !== false ? '_blank' : undefined}
+                class="cta-monthly"
+              >
+                {config?.buttonText || 'Get Started'}
+              </Button>
+            );
+          })()}
+          
+          {/* Yearly CTA */}
+          {(() => {
+            const config = plan.yearly;
+            if (config?.promotionalText && config.promotionalText.trim()) {
+              return <div class="promotional cta-yearly">{config.promotionalText}</div>;
+            }
+            if (config?.useEmbed && config.embedCode) {
+              return <div class="cta-yearly" set:html={config.embedCode} />;
+            }
+            return (
+              <Button
+                href={config?.buttonLink || '#'}
+                variant={plan.isFeatured ? 'blue' : 'primary'}
+                size="default"
+                shadow={true}
+                target={config?.openInNewTab !== false ? '_blank' : undefined}
+                class="cta-yearly hidden"
+              >
+                {config?.buttonText || 'Get Started'}
+              </Button>
+            );
+          })()}
         </div>
       </div>
     ))}
@@ -407,48 +453,29 @@ const billingLabel = styles.billingTerminology === 'annual' ? 'Annual' : 'Yearly
     margin-top: 0.125rem;
   }
 
-  .cta-container a,
-  .cta-container button {
-    display: block !important;
-    width: 100% !important;
-    padding: 0.75rem 1rem !important;
-    border-radius: var(--borderRadius) !important;
-    text-align: center !important;
-    font-weight: 600 !important;
-    transition: all 0.2s !important;
-    text-decoration: none !important;
-    border: none !important;
-    cursor: pointer !important;
-    font-family: inherit !important;
-    font-size: 1rem !important;
-    line-height: 1.5 !important;
+  .cta-container {
+    margin-top: 1rem;
   }
 
-  .cta-container .primary {
-    background-color: var(--primaryColor) !important;
-    color: white !important;
+  .cta-monthly,
+  .cta-yearly {
+    width: 100%;
   }
 
-  .cta-container .primary:hover {
-    opacity: 0.9 !important;
-    transform: translateY(-1px) !important;
+  .cta-monthly.hidden,
+  .cta-yearly.hidden {
+    display: none;
   }
 
-  .cta-container .accent {
-    background-color: var(--accentColor) !important;
-    color: white !important;
-  }
-
-  .cta-container .accent:hover {
-    opacity: 0.9 !important;
-    transform: translateY(-1px) !important;
-  }
-
-  .cta-container .promotional {
+  .promotional {
     background-color: white;
     color: var(--accentColor);
     border: 2px solid var(--accentColor);
     font-size: 1.125rem;
+    padding: 0.75rem 1rem;
+    border-radius: var(--borderRadius);
+    text-align: center;
+    font-weight: 600;
   }
 </style>
 
@@ -474,15 +501,8 @@ const billingLabel = styles.billingTerminology === 'annual' ? 'Annual' : 'Yearly
       });
     });
 
-    // Initialize CTAs for all plans
-    const plans = ${JSON.stringify(plans)};
-    plans.forEach(plan => {
-      const card = document.querySelector(\`[data-plan-id="\${plan.id}"]\`);
-      if (!card) return;
-
-      const ctaContainer = card.querySelector('.cta-container');
-      updateCTA(ctaContainer, plan, currentBilling);
-    });
+    // Initialize CTA visibility
+    updateCTAVisibility(currentBilling);
 
     // Toggle features
     document.querySelectorAll('.toggle-features').forEach(btn => {
@@ -534,10 +554,23 @@ const billingLabel = styles.billingTerminology === 'annual' ? 'Annual' : 'Yearly
         } else {
           noteEl.textContent = calculateSavingsText(plan);
         }
-
-        // Update CTA
-        updateCTA(ctaContainer, plan, currentBilling);
       });
+
+      // Update CTA visibility
+      updateCTAVisibility(currentBilling);
+    }
+
+    function updateCTAVisibility(billing) {
+      const monthlyCTAs = document.querySelectorAll('.cta-monthly');
+      const yearlyCTAs = document.querySelectorAll('.cta-yearly');
+      
+      if (billing === 'monthly') {
+        monthlyCTAs.forEach(el => el.classList.remove('hidden'));
+        yearlyCTAs.forEach(el => el.classList.add('hidden'));
+      } else {
+        monthlyCTAs.forEach(el => el.classList.add('hidden'));
+        yearlyCTAs.forEach(el => el.classList.remove('hidden'));
+      }
     }
 
     function calculateSavingsText(plan) {
@@ -565,29 +598,6 @@ const billingLabel = styles.billingTerminology === 'annual' ? 'Annual' : 'Yearly
       }
       
       return '';
-    }
-
-    function updateCTA(container, plan, billing) {
-      const config = billing === 'monthly' ? plan.monthly : plan.yearly;
-      
-      if (config?.promotionalText && config.promotionalText.trim()) {
-        container.innerHTML = \`<div class="promotional">\${config.promotionalText}</div>\`;
-        return;
-      }
-
-      if (config?.useEmbed && config.embedCode) {
-        container.innerHTML = config.embedCode;
-        return;
-      }
-
-      const buttonText = config?.buttonText || 'Get Started';
-      const buttonLink = config?.buttonLink || '#';
-      const openInNewTab = config?.openInNewTab !== false;
-      const targetAttr = openInNewTab ? ' target="_blank" rel="noopener noreferrer"' : '';
-      const buttonClass = plan.isFeatured ? 'accent' : 'primary';
-
-      // Always render as anchor tag styled as button
-      container.innerHTML = \`<a href="\${buttonLink}"\${targetAttr} class="\${buttonClass}">\${buttonText}</a>\`;
     }
   };
 
