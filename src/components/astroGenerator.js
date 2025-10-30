@@ -409,38 +409,39 @@ const billingLabel = styles.billingTerminology === 'annual' ? 'Annual' : 'Yearly
 
   .cta-container a,
   .cta-container button {
-    display: block;
-    width: 100%;
-    padding: 0.75rem 1rem;
-    border-radius: var(--borderRadius);
-    text-align: center;
-    font-weight: 600;
-    transition: all 0.2s;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 1rem;
+    display: block !important;
+    width: 100% !important;
+    padding: 0.75rem 1rem !important;
+    border-radius: var(--borderRadius) !important;
+    text-align: center !important;
+    font-weight: 600 !important;
+    transition: all 0.2s !important;
+    text-decoration: none !important;
+    border: none !important;
+    cursor: pointer !important;
+    font-family: inherit !important;
+    font-size: 1rem !important;
+    line-height: 1.5 !important;
   }
 
   .cta-container .primary {
-    background-color: var(--primaryColor);
-    color: white;
+    background-color: var(--primaryColor) !important;
+    color: white !important;
   }
 
   .cta-container .primary:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
+    opacity: 0.9 !important;
+    transform: translateY(-1px) !important;
   }
 
   .cta-container .accent {
-    background-color: var(--accentColor);
-    color: white;
+    background-color: var(--accentColor) !important;
+    color: white !important;
   }
 
   .cta-container .accent:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
+    opacity: 0.9 !important;
+    transform: translateY(-1px) !important;
   }
 
   .cta-container .promotional {
@@ -585,12 +586,8 @@ const billingLabel = styles.billingTerminology === 'annual' ? 'Annual' : 'Yearly
       const targetAttr = openInNewTab ? ' target="_blank" rel="noopener noreferrer"' : '';
       const buttonClass = plan.isFeatured ? 'accent' : 'primary';
 
-      // If there's no link or it's just '#', render as button, otherwise render as anchor
-      if (!buttonLink || buttonLink === '#' || buttonLink === '') {
-        container.innerHTML = \`<button class="\${buttonClass}" type="button">\${buttonText}</button>\`;
-      } else {
-        container.innerHTML = \`<a href="\${buttonLink}"\${targetAttr} class="\${buttonClass}">\${buttonText}</a>\`;
-      }
+      // Always render as anchor tag styled as button
+      container.innerHTML = \`<a href="\${buttonLink}"\${targetAttr} class="\${buttonClass}">\${buttonText}</a>\`;
     }
   };
 
