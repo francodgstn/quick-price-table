@@ -175,7 +175,9 @@ export default function PricingPreview({ plans, styles, header, billingPeriod, s
                 styles.layoutMode === 'horizontal-scroll' ? 'flex-shrink-0 snap-center' : ''
               }`}
               style={{
-                backgroundColor: 'white',
+                background: plan.gradientEnabled 
+                  ? `linear-gradient(${plan.gradientDirection || 'to bottom'}, ${plan.gradientColor || '#3B82F6'}, transparent)`
+                  : 'white',
                 borderRadius: `${styles.borderRadius}px`,
                 border: plan.isFeatured ? `2px solid ${styles.accentColor}` : '1px solid #e5e7eb',
                 boxShadow: plan.isFeatured ? '0 10px 25px rgba(0,0,0,0.1)' : '0 1px 3px rgba(0,0,0,0.1)',

@@ -16,6 +16,9 @@ export const generateAstroComponent = (plans, styles, header) => {
     included: boolean;
   }>;
   isFeatured: boolean;
+  gradientEnabled?: boolean;
+  gradientColor?: string;
+  gradientDirection?: string;
   monthly?: {
     buttonText?: string;
     buttonLink?: string;
@@ -105,6 +108,7 @@ const billingLabel = styles.billingTerminology === 'annual' ? 'Annual' : 'Yearly
     {plans.map((plan) => (
       <div 
         class={\`pricing-card \${plan.isFeatured ? 'featured' : ''}\`}
+        style={plan.gradientEnabled ? \`background: linear-gradient(\${plan.gradientDirection || 'to bottom'}, \${plan.gradientColor || '#3B82F6'}, transparent);\` : 'background: white;'}
         data-plan-id={plan.id}
       >
         {plan.isFeatured && (
@@ -268,7 +272,6 @@ const billingLabel = styles.billingTerminology === 'annual' ? 'Annual' : 'Yearly
   }
 
   .pricing-card {
-    background: white;
     border-radius: var(--borderRadius);
     border: 1px solid #e5e7eb;
     padding: 1.5rem;
@@ -417,6 +420,7 @@ const billingLabel = styles.billingTerminology === 'annual' ? 'Annual' : 'Yearly
     border: none;
     cursor: pointer;
     font-family: inherit;
+    font-size: 1rem;
   }
 
   .cta-container .primary {
@@ -424,9 +428,19 @@ const billingLabel = styles.billingTerminology === 'annual' ? 'Annual' : 'Yearly
     color: white;
   }
 
+  .cta-container .primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
   .cta-container .accent {
     background-color: var(--accentColor);
     color: white;
+  }
+
+  .cta-container .accent:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
   }
 
   .cta-container .promotional {
@@ -571,7 +585,12 @@ const billingLabel = styles.billingTerminology === 'annual' ? 'Annual' : 'Yearly
       const targetAttr = openInNewTab ? ' target="_blank" rel="noopener noreferrer"' : '';
       const buttonClass = plan.isFeatured ? 'accent' : 'primary';
 
-      container.innerHTML = \`<a href="\${buttonLink}"\${targetAttr} class="\${buttonClass}">\${buttonText}</a>\`;
+      // If there's no link or it's just '#', render as button, otherwise render as anchor
+      if (!buttonLink || buttonLink === '#' || buttonLink === '') {
+        container.innerHTML = \`<button class="\${buttonClass}" type="button">\${buttonText}</button>\`;
+      } else {
+        container.innerHTML = \`<a href="\${buttonLink}"\${targetAttr} class="\${buttonClass}">\${buttonText}</a>\`;
+      }
     }
   };
 

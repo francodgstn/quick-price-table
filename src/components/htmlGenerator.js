@@ -128,6 +128,7 @@ export const generateHTML = (plans, styles, header) => {
     
     return `
       <div class="pricing-card${plan.isFeatured ? ' featured' : ''}" 
+           style="${plan.gradientEnabled ? `background: linear-gradient(${plan.gradientDirection || 'to bottom'}, ${plan.gradientColor || '#3B82F6'}, transparent);` : 'background: white;'}"
            data-monthly-action="${encodeURIComponent(monthlyActionHTML)}"
            data-yearly-action="${encodeURIComponent(yearlyActionHTML)}"
            data-monthly-promo="${encodeURIComponent(monthlyPromotionalHTML)}"
@@ -316,7 +317,6 @@ export const generateHTML = (plans, styles, header) => {
     }
     .pricing-card {
       position: relative;
-      background: white;
       padding: 2rem 1.5rem;
       border-radius: ${styles.borderRadius}px;
       border: 1px solid #e5e7eb;

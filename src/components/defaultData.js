@@ -44,7 +44,10 @@ export const defaultData = {
       actionEmbedCode: '',
       isFeatured: false,
       monthlyPromo: '',
-      yearlyPromo: ''
+      yearlyPromo: '',
+      gradientEnabled: false,
+      gradientColor: '#3B82F6',
+      gradientDirection: 'to bottom'
     },
     {
       id: 2,
@@ -69,7 +72,10 @@ export const defaultData = {
       actionEmbedCode: '',
       isFeatured: true,
       monthlyPromo: '',
-      yearlyPromo: 'Save {savings_vs_monthly} per year - Only {yearly_rate_equivalent}/month'
+      yearlyPromo: 'Save {savings_vs_monthly} per year - Only {yearly_rate_equivalent}/month',
+      gradientEnabled: false,
+      gradientColor: '#3B82F6',
+      gradientDirection: 'to bottom'
     },
     {
       id: 3,
@@ -94,7 +100,10 @@ export const defaultData = {
       actionEmbedCode: '',
       isFeatured: false,
       monthlyPromo: '',
-      yearlyPromo: 'Best value - Save {savings_vs_monthly} with annual billing'
+      yearlyPromo: 'Best value - Save {savings_vs_monthly} with annual billing',
+      gradientEnabled: false,
+      gradientColor: '#3B82F6',
+      gradientDirection: 'to bottom'
     }
   ],
   defaultBilling: 'monthly'

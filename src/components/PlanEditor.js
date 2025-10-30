@@ -403,6 +403,68 @@ export default function PlanEditor({
             {plan.isFeatured ? 'Featured' : 'Set as Featured'}
           </button>
 
+          {/* Gradient Background Options */}
+          <div className="border rounded p-3 space-y-3" style={{ borderColor: '#e5e7eb', backgroundColor: '#f9fafb' }}>
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                id={`gradient-${plan.id}`}
+                checked={plan.gradientEnabled || false}
+                onChange={(e) => updatePlan(plan.id, 'gradientEnabled', e.target.checked)}
+                className="w-4 h-4"
+              />
+              <label htmlFor={`gradient-${plan.id}`} className="text-sm font-semibold" style={{ color: '#1f2937' }}>
+                Enable Gradient Background
+              </label>
+            </div>
+            
+            {plan.gradientEnabled && (
+              <div className="space-y-3 pl-6">
+                <div>
+                  <label className="text-xs block mb-1" style={{ color: '#6b7280' }}>
+                    Gradient Color
+                  </label>
+                  <div className="flex gap-2 items-center">
+                    <input
+                      type="color"
+                      value={plan.gradientColor || '#3B82F6'}
+                      onChange={(e) => updatePlan(plan.id, 'gradientColor', e.target.value)}
+                      className="w-10 h-8 rounded cursor-pointer"
+                    />
+                    <input
+                      type="text"
+                      value={plan.gradientColor || '#3B82F6'}
+                      onChange={(e) => updatePlan(plan.id, 'gradientColor', e.target.value)}
+                      className="flex-1 border rounded px-2 py-1 text-xs font-mono"
+                      style={{ borderColor: '#d1d5db' }}
+                    />
+                  </div>
+                </div>
+                
+                <div>
+                  <label className="text-xs block mb-1" style={{ color: '#6b7280' }}>
+                    Gradient Direction
+                  </label>
+                  <select
+                    value={plan.gradientDirection || 'to bottom'}
+                    onChange={(e) => updatePlan(plan.id, 'gradientDirection', e.target.value)}
+                    className="w-full border rounded px-2 py-1 text-sm"
+                    style={{ borderColor: '#d1d5db' }}
+                  >
+                    <option value="to top">↑ To Top</option>
+                    <option value="to bottom">↓ To Bottom</option>
+                    <option value="to left">← To Left</option>
+                    <option value="to right">→ To Right</option>
+                    <option value="to top left">↖ To Top Left</option>
+                    <option value="to top right">↗ To Top Right</option>
+                    <option value="to bottom left">↙ To Bottom Left</option>
+                    <option value="to bottom right">↘ To Bottom Right</option>
+                  </select>
+                </div>
+              </div>
+            )}
+          </div>
+
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <label className="text-xs font-semibold" style={{ color: '#1f2937' }}>Features</label>
