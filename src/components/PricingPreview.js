@@ -287,7 +287,7 @@ export default function PricingPreview({ plans, styles, header, billingPeriod, s
                     <div 
                       className="w-full py-3 px-4 rounded-lg text-center font-semibold text-lg"
                       style={{
-                        backgroundColor: styles.accentColor + '20',
+                        backgroundColor: 'white',
                         color: styles.accentColor,
                         borderRadius: `${styles.borderRadius}px`,
                         border: `2px solid ${styles.accentColor}`

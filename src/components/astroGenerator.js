@@ -444,7 +444,7 @@ const billingLabel = styles.billingTerminology === 'annual' ? 'Annual' : 'Yearly
   }
 
   .cta-container .promotional {
-    background-color: color-mix(in srgb, var(--accentColor) 20%, transparent);
+    background-color: white;
     color: var(--accentColor);
     border: 2px solid var(--accentColor);
     font-size: 1.125rem;

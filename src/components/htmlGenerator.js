@@ -42,11 +42,11 @@ export const generateHTML = (plans, styles, header) => {
     
     // Promotional text per billing period
     const monthlyPromotionalHTML = monthlyAction.promotionalText && monthlyAction.promotionalText.trim()
-      ? `<div class="promo-box" style="background-color: ${styles.accentColor}20; color: ${styles.accentColor}; border: 2px solid ${styles.accentColor}; padding: 0.75rem 1rem; border-radius: ${styles.borderRadius}px; text-align: center; font-weight: 600; font-size: 1.125rem;">${monthlyAction.promotionalText}</div>`
+      ? `<div class="promo-box" style="background-color: white; color: ${styles.accentColor}; border: 2px solid ${styles.accentColor}; padding: 0.75rem 1rem; border-radius: ${styles.borderRadius}px; text-align: center; font-weight: 600; font-size: 1.125rem;">${monthlyAction.promotionalText}</div>`
       : '';
     
     const yearlyPromotionalHTML = yearlyAction.promotionalText && yearlyAction.promotionalText.trim()
-      ? `<div class="promo-box" style="background-color: ${styles.accentColor}20; color: ${styles.accentColor}; border: 2px solid ${styles.accentColor}; padding: 0.75rem 1rem; border-radius: ${styles.borderRadius}px; text-align: center; font-weight: 600; font-size: 1.125rem;">${yearlyAction.promotionalText}</div>`
+      ? `<div class="promo-box" style="background-color: white; color: ${styles.accentColor}; border: 2px solid ${styles.accentColor}; padding: 0.75rem 1rem; border-radius: ${styles.borderRadius}px; text-align: center; font-weight: 600; font-size: 1.125rem;">${yearlyAction.promotionalText}</div>`
       : '';
     
     // Calculate savings with template system support per billing period
