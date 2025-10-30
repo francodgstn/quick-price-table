@@ -1,6 +1,7 @@
 export const generateAstroComponent = (plans, styles, header) => {
   const currency = styles.currency || 'CHF';
   const defaultPeriod = header.defaultBillingPeriod || 'monthly';
+  const billingLabel = styles.billingTerminology === 'annual' ? 'Annual' : 'Yearly';
   
   // Generate TypeScript interface for props
   const interfaceCode = `interface Plan {
@@ -76,6 +77,7 @@ ${propsCode}
 
 const currency = styles.currency || 'CHF';
 const defaultBillingPeriod = header.defaultBillingPeriod || 'monthly';
+const billingLabel = styles.billingTerminology === 'annual' ? 'Annual' : 'Yearly';
 ---
 
 <div class="pricing-table-container">
@@ -89,7 +91,7 @@ const defaultBillingPeriod = header.defaultBillingPeriod || 'monthly';
   <div class="billing-toggle">
     <div class="toggle-container">
       <button class="toggle-btn" data-period="monthly">Monthly</button>
-      <button class="toggle-btn" data-period="yearly">Yearly</button>
+      <button class="toggle-btn" data-period="yearly">{billingLabel}</button>
     </div>
     
     {header.showYearlyIncentive !== false && (
@@ -268,6 +270,8 @@ const defaultBillingPeriod = header.defaultBillingPeriod || 'monthly';
     padding: 1.5rem;
     position: relative;
     transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
   }
 
   .pricing-card.featured {
@@ -356,6 +360,7 @@ const defaultBillingPeriod = header.defaultBillingPeriod || 'monthly';
   .features-list {
     list-style: none;
     margin-bottom: 1.5rem;
+    flex-grow: 1;
   }
 
   .features-list.hidden {

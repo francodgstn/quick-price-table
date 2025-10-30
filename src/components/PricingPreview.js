@@ -54,11 +54,12 @@ export default function PricingPreview({ plans, styles, header, billingPeriod, s
     }
     
     // Default templates
+    const billingTerm = styles.billingTerminology === 'annual' ? 'annual' : 'yearly';
     if (billingPeriod === 'monthly' && plan.yearlyPrice > 0) {
       if (savingsVsMonthly > 0) {
-        return `Save ${currency} ${savingsVsMonthly} with annual billing`;
+        return `Save ${currency} ${savingsVsMonthly} with ${billingTerm} billing`;
       }
-      return `${currency} ${yearlyRateEquivalent} per month if billed annually`;
+      return `${currency} ${yearlyRateEquivalent} per month if billed ${billingTerm}ly`;
     } else if (billingPeriod === 'yearly' && plan.yearlyPrice > 0) {
       return `${currency} ${yearlyRateEquivalent} per month`;
     }
@@ -112,7 +113,7 @@ export default function PricingPreview({ plans, styles, header, billingPeriod, s
                 color: billingPeriod === 'yearly' ? 'white' : styles.textColor
               }}
             >
-              Yearly
+              {styles.billingTerminology === 'annual' ? 'Annual' : 'Yearly'}
             </button>
           </div>
           
@@ -170,7 +171,7 @@ export default function PricingPreview({ plans, styles, header, billingPeriod, s
           {plans.map((plan) => (
             <div
               key={plan.id}
-              className={`relative p-6 transition-all ${plan.isFeatured ? 'transform scale-105' : ''} ${
+              className={`relative p-6 transition-all flex flex-col ${plan.isFeatured ? 'transform scale-105' : ''} ${
                 styles.layoutMode === 'horizontal-scroll' ? 'flex-shrink-0 snap-center' : ''
               }`}
               style={{
@@ -247,7 +248,7 @@ export default function PricingPreview({ plans, styles, header, billingPeriod, s
                 </button>
               )}
 
-              <ul className={`space-y-3 mb-6 ${styles.compactMode && !expandedCards[plan.id] ? 'hidden' : ''}`}>
+              <ul className={`space-y-3 mb-6 flex-grow ${styles.compactMode && !expandedCards[plan.id] ? 'hidden' : ''}`}>
                 {plan.features.map((feature, idx) => (
                   <li key={idx} className="flex items-start gap-2 text-sm">
                     {feature.included ? (

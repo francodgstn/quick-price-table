@@ -17,7 +17,8 @@ export const defaultData = {
     layoutMode: 'responsive',
     compactMode: false,
     showFreeForZeroPrice: true,
-    currency: 'CHF'
+    currency: 'CHF',
+    billingTerminology: 'yearly'
   },
   plans: [
     {

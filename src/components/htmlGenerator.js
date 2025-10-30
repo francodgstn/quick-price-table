@@ -1,6 +1,7 @@
 export const generateHTML = (plans, styles, header) => {
   const defaultPeriod = header.defaultBillingPeriod || 'monthly';
   const currency = styles.currency || 'CHF';
+  const billingLabel = styles.billingTerminology === 'annual' ? 'Annual' : 'Yearly';
   const fontLink = styles.fontFamily.includes('Montserrat') 
     ? '<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">'
     : '';
@@ -317,6 +318,8 @@ export const generateHTML = (plans, styles, header) => {
       border: 1px solid #e5e7eb;
       box-shadow: 0 1px 3px rgba(0,0,0,0.1);
       transition: all 0.3s;
+      display: flex;
+      flex-direction: column;
     }
     .horizontal-scroll .pricing-card {
       flex-shrink: 0;
@@ -376,6 +379,7 @@ export const generateHTML = (plans, styles, header) => {
     .features {
       list-style: none;
       margin-bottom: 1.5rem;
+      flex-grow: 1;
     }
     .features.collapsed {
       display: none;
@@ -466,7 +470,7 @@ export const generateHTML = (plans, styles, header) => {
     <div class="billing-toggle">
       <div class="toggle-container">
         <button class="toggle-btn ${defaultPeriod === 'monthly' ? 'active' : ''}" id="monthlyBtn" onclick="switchBilling('monthly')">Monthly</button>
-        <button class="toggle-btn ${defaultPeriod === 'yearly' ? 'active' : ''}" id="yearlyBtn" onclick="switchBilling('yearly')">Yearly</button>
+        <button class="toggle-btn ${defaultPeriod === 'yearly' ? 'active' : ''}" id="yearlyBtn" onclick="switchBilling('yearly')">${billingLabel}</button>
       </div>
       ${header.showYearlyIncentive !== false ? `
       <div class="yearly-incentive">

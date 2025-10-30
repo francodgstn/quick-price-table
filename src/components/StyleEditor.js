@@ -138,6 +138,35 @@ export default function StyleEditor({ styles, setStyles }) {
             Display "FREE" instead of "CHF 0" when price is zero
           </p>
         </div>
+
+        <div>
+          <label className="block text-sm mb-2 text-gray-700">Billing Period Terminology</label>
+          <div className="flex gap-2">
+            <button
+              onClick={() => setStyles({...styles, billingTerminology: 'yearly'})}
+              className={`flex-1 px-3 py-2 rounded text-sm transition-all ${styles.billingTerminology !== 'annual' ? 'font-semibold' : ''}`}
+              style={{
+                backgroundColor: styles.billingTerminology !== 'annual' ? '#3b82f6' : '#f3f4f6',
+                color: styles.billingTerminology !== 'annual' ? 'white' : '#374151'
+              }}
+            >
+              Yearly
+            </button>
+            <button
+              onClick={() => setStyles({...styles, billingTerminology: 'annual'})}
+              className={`flex-1 px-3 py-2 rounded text-sm transition-all ${styles.billingTerminology === 'annual' ? 'font-semibold' : ''}`}
+              style={{
+                backgroundColor: styles.billingTerminology === 'annual' ? '#3b82f6' : '#f3f4f6',
+                color: styles.billingTerminology === 'annual' ? 'white' : '#374151'
+              }}
+            >
+              Annual
+            </button>
+          </div>
+          <p className="text-xs mt-1" style={{ color: '#9ca3af' }}>
+            Choose terminology: "Yearly" or "Annual" for the billing toggle
+          </p>
+        </div>
     </div>
   );
 }
