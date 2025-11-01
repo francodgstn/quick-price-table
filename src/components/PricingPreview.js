@@ -275,52 +275,77 @@ export default function PricingPreview({ plans, styles, header, billingPeriod, s
                 ))}
               </ul>
 
-              {(() => {
-                // Get current period's action configuration
-                const currentAction = billingPeriod === 'monthly' ? plan.monthly : plan.yearly;
-                const promotionalText = currentAction?.promotionalText;
-                
-                // Show promotional text instead of CTA when promotional text exists
-                if (promotionalText && promotionalText.trim()) {
-                  return (
-                    <div 
-                      className="w-full py-3 px-4 rounded-lg text-center font-semibold text-lg"
-                      style={{
-                        backgroundColor: 'white',
-                        color: styles.accentColor,
-                        borderRadius: `${styles.borderRadius}px`,
-                        border: `2px solid ${styles.accentColor}`
-                      }}
-                    >
-                      {promotionalText}
-                    </div>
-                  );
-                }
+              {/* Monthly promotional text */}
+              {plan.monthly?.promotionalText && plan.monthly.promotionalText.trim() && (
+                <div 
+                  className={`w-full py-3 px-4 rounded-lg text-center font-semibold text-lg ${billingPeriod === 'monthly' ? '' : 'hidden'}`}
+                  style={{
+                    backgroundColor: 'white',
+                    color: styles.accentColor,
+                    borderRadius: `${styles.borderRadius}px`,
+                    border: `2px solid ${styles.accentColor}`
+                  }}
+                >
+                  {plan.monthly.promotionalText}
+                </div>
+              )}
 
-                const useEmbed = currentAction?.useEmbed;
-                const buttonText = currentAction?.buttonText || 'Get Started';
-                const buttonLink = currentAction?.buttonLink || '#';
-                const embedCode = currentAction?.embedCode || '';
-                const openInNewTab = currentAction?.openInNewTab !== false;
+              {/* Yearly promotional text */}
+              {plan.yearly?.promotionalText && plan.yearly.promotionalText.trim() && (
+                <div 
+                  className={`w-full py-3 px-4 rounded-lg text-center font-semibold text-lg ${billingPeriod === 'yearly' ? '' : 'hidden'}`}
+                  style={{
+                    backgroundColor: 'white',
+                    color: styles.accentColor,
+                    borderRadius: `${styles.borderRadius}px`,
+                    border: `2px solid ${styles.accentColor}`
+                  }}
+                >
+                  {plan.yearly.promotionalText}
+                </div>
+              )}
 
-                return !useEmbed ? (
+              {/* Monthly CTA button */}
+              {(!plan.monthly?.promotionalText || !plan.monthly.promotionalText.trim()) && (
+                plan.monthly?.useEmbed ? (
+                  <div className={`w-full ${billingPeriod === 'monthly' ? '' : 'hidden'}`} dangerouslySetInnerHTML={{ __html: plan.monthly?.embedCode || '' }} />
+                ) : (
                   <a
-                    href={buttonLink}
-                    target={openInNewTab ? '_blank' : '_self'}
-                    rel={openInNewTab ? 'noopener noreferrer' : undefined}
-                    className="block w-full py-3 px-4 rounded-lg text-center font-semibold transition-all"
+                    href={plan.monthly?.buttonLink || '#'}
+                    target={plan.monthly?.openInNewTab !== false ? '_blank' : '_self'}
+                    rel={plan.monthly?.openInNewTab !== false ? 'noopener noreferrer' : undefined}
+                    className={`block w-full py-3 px-4 rounded-lg text-center font-semibold transition-all ${billingPeriod === 'monthly' ? '' : 'hidden'}`}
                     style={{
                       backgroundColor: plan.isFeatured ? styles.accentColor : styles.primaryColor,
                       color: 'white',
                       borderRadius: `${styles.borderRadius}px`
                     }}
                   >
-                    {buttonText}
+                    {plan.monthly?.buttonText || 'Get Started'}
                   </a>
+                )
+              )}
+
+              {/* Yearly CTA button */}
+              {(!plan.yearly?.promotionalText || !plan.yearly.promotionalText.trim()) && (
+                plan.yearly?.useEmbed ? (
+                  <div className={`w-full ${billingPeriod === 'yearly' ? '' : 'hidden'}`} dangerouslySetInnerHTML={{ __html: plan.yearly?.embedCode || '' }} />
                 ) : (
-                  <div className="w-full" dangerouslySetInnerHTML={{ __html: embedCode }} />
-                );
-              })()}
+                  <a
+                    href={plan.yearly?.buttonLink || '#'}
+                    target={plan.yearly?.openInNewTab !== false ? '_blank' : '_self'}
+                    rel={plan.yearly?.openInNewTab !== false ? 'noopener noreferrer' : undefined}
+                    className={`block w-full py-3 px-4 rounded-lg text-center font-semibold transition-all ${billingPeriod === 'yearly' ? '' : 'hidden'}`}
+                    style={{
+                      backgroundColor: plan.isFeatured ? styles.accentColor : styles.primaryColor,
+                      color: 'white',
+                      borderRadius: `${styles.borderRadius}px`
+                    }}
+                  >
+                    {plan.yearly?.buttonText || 'Get Started'}
+                  </a>
+                )
+              )}
             </div>
           ))}
           </div>

@@ -169,8 +169,42 @@ const billingLabel = styles.billingTerminology === 'annual' ? 'Annual' : 'Yearly
           ))}
         </ul>
 
-        <div class="cta-container" data-monthly-cta data-yearly-cta>
-          <!-- CTA buttons will be populated by client-side script -->
+        <div class="cta-container">
+          {plan.monthly?.promotionalText && plan.monthly.promotionalText.trim() && (
+            <div class="promotional monthly-promo">{plan.monthly.promotionalText}</div>
+          )}
+          {(!plan.monthly?.promotionalText || !plan.monthly.promotionalText.trim()) && (
+            plan.monthly?.useEmbed && plan.monthly.embedCode ? (
+              <div class="monthly-cta" set:html={plan.monthly.embedCode} />
+            ) : (
+              <a 
+                href={plan.monthly?.buttonLink || '#'}
+                target={plan.monthly?.openInNewTab !== false ? '_blank' : undefined}
+                rel={plan.monthly?.openInNewTab !== false ? 'noopener noreferrer' : undefined}
+                class={\`cta-button monthly-cta \${plan.isFeatured ? 'accent' : 'primary'}\`}
+              >
+                {plan.monthly?.buttonText || 'Get Started'}
+              </a>
+            )
+          )}
+          
+          {plan.yearly?.promotionalText && plan.yearly.promotionalText.trim() && (
+            <div class="promotional yearly-promo hidden">{plan.yearly.promotionalText}</div>
+          )}
+          {(!plan.yearly?.promotionalText || !plan.yearly.promotionalText.trim()) && (
+            plan.yearly?.useEmbed && plan.yearly.embedCode ? (
+              <div class="yearly-cta hidden" set:html={plan.yearly.embedCode} />
+            ) : (
+              <a 
+                href={plan.yearly?.buttonLink || '#'}
+                target={plan.yearly?.openInNewTab !== false ? '_blank' : undefined}
+                rel={plan.yearly?.openInNewTab !== false ? 'noopener noreferrer' : undefined}
+                class={\`cta-button yearly-cta hidden \${plan.isFeatured ? 'accent' : 'primary'}\`}
+              >
+                {plan.yearly?.buttonText || 'Get Started'}
+              </a>
+            )
+          )}
         </div>
       </div>
     ))}
@@ -478,15 +512,8 @@ const billingLabel = styles.billingTerminology === 'annual' ? 'Annual' : 'Yearly
       });
     });
 
-    // Initialize CTAs for all plans
-    const plans = ${JSON.stringify(plans)};
-    plans.forEach(plan => {
-      const card = document.querySelector(\`[data-plan-id="\${plan.id}"]\`);
-      if (!card) return;
-
-      const ctaContainer = card.querySelector('.cta-container');
-      updateCTA(ctaContainer, plan, currentBilling);
-    });
+    // Initialize visibility
+    updateCTAVisibility(currentBilling);
 
     // Toggle features
     document.querySelectorAll('.toggle-features').forEach(btn => {
@@ -511,6 +538,7 @@ const billingLabel = styles.billingTerminology === 'annual' ? 'Annual' : 'Yearly
     });
 
     function updatePrices() {
+      const plans = ${JSON.stringify(plans)};
       plans.forEach(plan => {
         const card = document.querySelector(\`[data-plan-id="\${plan.id}"]\`);
         if (!card) return;
@@ -518,7 +546,6 @@ const billingLabel = styles.billingTerminology === 'annual' ? 'Annual' : 'Yearly
         const priceEl = card.querySelector('.price');
         const periodEl = card.querySelector('.price-period');
         const noteEl = card.querySelector('.price-note');
-        const ctaContainer = card.querySelector('.cta-container');
 
         const price = currentBilling === 'monthly' ? plan.monthlyPrice : plan.yearlyPrice;
         const showFree = ${styles.showFreeForZeroPrice !== false};
@@ -538,9 +565,29 @@ const billingLabel = styles.billingTerminology === 'annual' ? 'Annual' : 'Yearly
         } else {
           noteEl.textContent = calculateSavingsText(plan);
         }
+      });
+      
+      // Update CTA visibility
+      updateCTAVisibility(currentBilling);
+    }
 
-        // Update CTA
-        updateCTA(ctaContainer, plan, currentBilling);
+    function updateCTAVisibility(billing) {
+      // Toggle monthly elements
+      document.querySelectorAll('.monthly-promo, .monthly-cta').forEach(el => {
+        if (billing === 'monthly') {
+          el.classList.remove('hidden');
+        } else {
+          el.classList.add('hidden');
+        }
+      });
+      
+      // Toggle yearly elements
+      document.querySelectorAll('.yearly-promo, .yearly-cta').forEach(el => {
+        if (billing === 'yearly') {
+          el.classList.remove('hidden');
+        } else {
+          el.classList.add('hidden');
+        }
       });
     }
 
@@ -569,33 +616,6 @@ const billingLabel = styles.billingTerminology === 'annual' ? 'Annual' : 'Yearly
       }
       
       return '';
-    }
-
-    function updateCTA(container, plan, billing) {
-      const config = billing === 'monthly' ? plan.monthly : plan.yearly;
-      
-      if (config?.promotionalText && config.promotionalText.trim()) {
-        container.innerHTML = \`<div class="promotional">\${config.promotionalText}</div>\`;
-        return;
-      }
-
-      if (config?.useEmbed && config.embedCode) {
-        container.innerHTML = config.embedCode;
-        return;
-      }
-
-      const buttonText = config?.buttonText || 'Get Started';
-      const buttonLink = config?.buttonLink || '#';
-      const openInNewTab = config?.openInNewTab !== false;
-      const targetAttr = openInNewTab ? ' target="_blank" rel="noopener noreferrer"' : '';
-      const buttonClass = plan.isFeatured ? 'accent' : 'primary';
-
-      // If there's no link or it's just '#', render as button, otherwise render as anchor
-      if (!buttonLink || buttonLink === '#' || buttonLink === '') {
-        container.innerHTML = \`<button class="\${buttonClass}" type="button">\${buttonText}</button>\`;
-      } else {
-        container.innerHTML = \`<a href="\${buttonLink}"\${targetAttr} class="\${buttonClass}">\${buttonText}</a>\`;
-      }
     }
   };
 

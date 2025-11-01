@@ -129,12 +129,6 @@ export const generateHTML = (plans, styles, header) => {
     return `
       <div class="pricing-card${plan.isFeatured ? ' featured' : ''}" 
            style="${plan.gradientEnabled ? `background: linear-gradient(${plan.gradientDirection || 'to bottom'}, ${plan.gradientColor || '#3B82F6'}, transparent);` : 'background: white;'}"
-           data-monthly-action="${encodeURIComponent(monthlyActionHTML)}"
-           data-yearly-action="${encodeURIComponent(yearlyActionHTML)}"
-           data-monthly-promo="${encodeURIComponent(monthlyPromotionalHTML)}"
-           data-yearly-promo="${encodeURIComponent(yearlyPromotionalHTML)}"
-           data-has-monthly-promo="${monthlyAction.promotionalText ? 'true' : 'false'}"
-           data-has-yearly-promo="${yearlyAction.promotionalText ? 'true' : 'false'}"
            data-plan-id="${plan.id}">
         ${plan.isFeatured ? `<div class="featured-badge">${featuredBadgeText}</div>` : ''}
         
@@ -169,7 +163,14 @@ export const generateHTML = (plans, styles, header) => {
         </ul>
         
         <div class="action-container">
-          ${initialAction}
+          ${monthlyAction.promotionalText && monthlyAction.promotionalText.trim() 
+            ? `<div class="promotional-text monthly-promo">${monthlyPromotionalHTML}</div>` 
+            : `<div class="cta-button-wrapper monthly-cta">${monthlyActionHTML}</div>`
+          }
+          ${yearlyAction.promotionalText && yearlyAction.promotionalText.trim()
+            ? `<div class="promotional-text yearly-promo" style="display: none;">${yearlyPromotionalHTML}</div>`
+            : `<div class="cta-button-wrapper yearly-cta" style="display: none;">${yearlyActionHTML}</div>`
+          }
         </div>
       </div>
       `;
@@ -607,29 +608,19 @@ export const generateHTML = (plans, styles, header) => {
         }
       });
       
-      // Switch action buttons/embeds or show promotional text based on billing period
+      // Switch action buttons/embeds and promotional text based on billing period
       document.querySelectorAll('.pricing-card').forEach(card => {
-        const actionContainer = card.querySelector('.action-container');
-        if (actionContainer) {
-          // Check for promotional text for current period
-          const hasPromo = period === 'monthly' 
-            ? card.dataset.hasMonthlyPromo === 'true'
-            : card.dataset.hasYearlyPromo === 'true';
-          
-          const promotionalHTML = period === 'monthly'
-            ? decodeURIComponent(card.dataset.monthlyPromo || '')
-            : decodeURIComponent(card.dataset.yearlyPromo || '');
-          
-          // Show promotional text if it exists, otherwise show action
-          if (hasPromo && promotionalHTML) {
-            actionContainer.innerHTML = promotionalHTML;
-          } else {
-            const actionHTML = period === 'monthly' 
-              ? decodeURIComponent(card.dataset.monthlyAction)
-              : decodeURIComponent(card.dataset.yearlyAction);
-            actionContainer.innerHTML = actionHTML;
-          }
-        }
+        // Toggle monthly elements
+        const monthlyPromos = card.querySelectorAll('.monthly-promo');
+        const monthlyCTAs = card.querySelectorAll('.monthly-cta');
+        monthlyPromos.forEach(el => el.style.display = period === 'monthly' ? '' : 'none');
+        monthlyCTAs.forEach(el => el.style.display = period === 'monthly' ? '' : 'none');
+        
+        // Toggle yearly elements
+        const yearlyPromos = card.querySelectorAll('.yearly-promo');
+        const yearlyCTAs = card.querySelectorAll('.yearly-cta');
+        yearlyPromos.forEach(el => el.style.display = period === 'yearly' ? '' : 'none');
+        yearlyCTAs.forEach(el => el.style.display = period === 'yearly' ? '' : 'none');
       });
     }
     
