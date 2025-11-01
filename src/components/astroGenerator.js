@@ -421,6 +421,13 @@ const billingLabel = styles.billingTerminology === 'annual' ? 'Annual' : 'Yearly
     display: none;
   }
 
+  .monthly-promo.hidden,
+  .monthly-cta.hidden,
+  .yearly-promo.hidden,
+  .yearly-cta.hidden {
+    display: none !important;
+  }
+
   .feature-item {
     display: flex;
     align-items: flex-start;
