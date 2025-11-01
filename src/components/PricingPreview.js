@@ -171,7 +171,7 @@ export default function PricingPreview({ plans, styles, header, billingPeriod, s
           {plans.map((plan) => (
             <div
               key={plan.id}
-              className={`relative p-6 transition-all flex flex-col ${plan.isFeatured ? 'transform scale-105' : ''} ${
+              className={`relative p-6 transition-all flex flex-col shadow-lg hover:shadow-xl ${plan.isFeatured ? 'transform scale-105 shadow-2xl' : ''} ${
                 styles.layoutMode === 'horizontal-scroll' ? 'flex-shrink-0 snap-center' : ''
               }`}
               style={{
@@ -180,7 +180,6 @@ export default function PricingPreview({ plans, styles, header, billingPeriod, s
                   : 'white',
                 borderRadius: `${styles.borderRadius}px`,
                 border: plan.isFeatured ? `2px solid ${styles.accentColor}` : '1px solid #e5e7eb',
-                boxShadow: plan.isFeatured ? '0 10px 25px rgba(0,0,0,0.1)' : '0 1px 3px rgba(0,0,0,0.1)',
                 ...(styles.layoutMode === 'horizontal-scroll' ? { 
                   minWidth: '280px',
                   width: 'calc(70vw - 2rem)',
